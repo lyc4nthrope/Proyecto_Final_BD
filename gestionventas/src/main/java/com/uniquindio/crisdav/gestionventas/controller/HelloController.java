@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas;
+package com.uniquindio.crisdav.gestionventas.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
