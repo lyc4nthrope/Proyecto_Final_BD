@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controller.VentaController">
+    <top>
+        <VBox spacing="10" padding="10">
+            <HBox spacing="10">
+                <Label text="Cliente:"/>
+                <ComboBox fx:id="cbCliente" promptText="Seleccionar cliente"/>
+                <Label text="Tipo de venta:"/>
+                <ComboBox fx:id="cbTipoVenta" promptText="Contado o Crédito"/>
+                <Label text="Fecha:"/>
+                <DatePicker fx:id="dpFecha"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Producto:"/>
+                <ComboBox fx:id="cbProducto" promptText="Seleccionar producto"/>
+                <Label text="Cantidad:"/>
+                <TextField fx:id="txtCantidad" promptText="Cantidad"/>
+                <Button text="Agregar al detalle" onAction="#agregarDetalle" />
+            </HBox>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="10" padding="10">
+            <TableView fx:id="tablaDetalleVenta" prefHeight="200">
+                <columns>
+                    <TableColumn fx:id="colIdProducto" text="ID Producto" prefWidth="80" />
+                    <TableColumn fx:id="colNombreProducto" text="Nombre" prefWidth="120" />
+                    <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="80" />
+                    <TableColumn fx:id="colSubtotal" text="Subtotal" prefWidth="100" />
+                </columns>
+            </TableView>
+            <HBox spacing="10">
+                <Button text="Eliminar del detalle" onAction="#eliminarDetalle" />
+                <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
+                <Label text="Total:"/>
+                <Label fx:id="lblTotal" text="0.0" style="-fx-font-weight: bold;"/>
+            </HBox>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox spacing="10" padding="10">
+            <Button text="Guardar Venta" onAction="#guardarVenta" />
+            <Button text="Limpiar" onAction="#limpiarFormulario" />
+        </HBox>
+    </bottom>
+</BorderPane>
