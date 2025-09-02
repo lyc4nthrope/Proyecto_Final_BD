@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.model;
+package com.uniquindio.crisdav.gestionventas.models;
 
 import java.time.LocalDate;
 

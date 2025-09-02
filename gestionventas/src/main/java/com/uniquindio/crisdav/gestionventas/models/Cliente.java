@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.model;
+package com.uniquindio.crisdav.gestionventas.models;
 
 /**
  * Entidad Cliente: representa la tabla CLIENTE en la base de datos.

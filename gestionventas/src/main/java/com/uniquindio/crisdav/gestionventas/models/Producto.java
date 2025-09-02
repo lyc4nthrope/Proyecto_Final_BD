@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.model;
+package com.uniquindio.crisdav.gestionventas.models;
 
 /**
  * Entidad Producto: representa la tabla PRODUCTO en la base de datos.

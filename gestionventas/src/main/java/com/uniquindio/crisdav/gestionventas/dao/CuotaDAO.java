@@ -1,7 +1,7 @@
 package com.uniquindio.crisdav.gestionventas.dao;
 
-import com.uniquindio.crisdav.gestionventas.model.Cuota;
-import com.uniquindio.crisdav.gestionventas.util.DBUtil;
+import com.uniquindio.crisdav.gestionventas.models.Cuota;
+import com.uniquindio.crisdav.gestionventas.utils.DBUtil;
 
 import java.sql.*;
 import java.time.LocalDate;

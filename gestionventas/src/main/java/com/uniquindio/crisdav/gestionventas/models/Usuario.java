@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.model;
+package com.uniquindio.crisdav.gestionventas.models;
 
 /**
  * Entidad Usuario: representa la tabla USUARIO en la base de datos (opcional para login).

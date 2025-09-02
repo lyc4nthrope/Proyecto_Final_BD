@@ -1,7 +1,8 @@
-package com.uniquindio.crisdav.gestionventas.controller;
+package com.uniquindio.crisdav.gestionventas.controllers;
 
 import com.uniquindio.crisdav.gestionventas.dao.ProductoDAO;
-import com.uniquindio.crisdav.gestionventas.model.Producto;
+import com.uniquindio.crisdav.gestionventas.models.Producto;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

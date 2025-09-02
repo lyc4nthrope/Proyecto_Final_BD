@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.util;
+package com.uniquindio.crisdav.gestionventas.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

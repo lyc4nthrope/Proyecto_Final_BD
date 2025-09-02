@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.model;
+package com.uniquindio.crisdav.gestionventas.models;
 
 /**
  * Entidad DetalleVenta: representa la tabla DETALLEVENTA en la base de datos.

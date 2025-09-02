@@ -1,7 +1,7 @@
 package com.uniquindio.crisdav.gestionventas.dao;
 
-import com.uniquindio.crisdav.gestionventas.model.Usuario;
-import com.uniquindio.crisdav.gestionventas.util.DBUtil;
+import com.uniquindio.crisdav.gestionventas.models.Usuario;
+import com.uniquindio.crisdav.gestionventas.utils.DBUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
