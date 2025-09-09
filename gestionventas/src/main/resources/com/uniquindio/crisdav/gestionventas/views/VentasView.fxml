@@ -5,7 +5,10 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controller.VentaController">
     <top>
-        <VBox spacing="10" padding="10">
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
             <HBox spacing="10">
                 <Label text="Cliente:"/>
                 <ComboBox fx:id="cbCliente" promptText="Seleccionar cliente"/>
@@ -24,7 +27,10 @@
         </VBox>
     </top>
     <center>
-        <VBox spacing="10" padding="10">
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
             <TableView fx:id="tablaDetalleVenta" prefHeight="200">
                 <columns>
                     <TableColumn fx:id="colIdProducto" text="ID Producto" prefWidth="80" />
@@ -42,7 +48,10 @@
         </VBox>
     </center>
     <bottom>
-        <HBox spacing="10" padding="10">
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
             <Button text="Guardar Venta" onAction="#guardarVenta" />
             <Button text="Limpiar" onAction="#limpiarFormulario" />
         </HBox>

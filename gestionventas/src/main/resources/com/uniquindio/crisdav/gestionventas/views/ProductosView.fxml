@@ -4,7 +4,10 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controller.ProductoController">
     <center>
-        <VBox spacing="10" padding="10">
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10" />
+            </padding>
             <TableView fx:id="tablaProductos" prefHeight="300" onMouseClicked="#seleccionarProducto">
                 <columns>
                     <TableColumn fx:id="colId" text="ID" prefWidth="50" />
