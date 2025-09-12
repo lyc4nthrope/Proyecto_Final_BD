@@ -4,7 +4,6 @@ import com.uniquindio.crisdav.gestionventas.models.Venta;
 import com.uniquindio.crisdav.gestionventas.utils.DBUtil;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

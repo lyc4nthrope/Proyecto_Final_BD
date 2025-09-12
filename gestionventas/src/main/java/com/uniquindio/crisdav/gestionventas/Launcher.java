@@ -23,10 +23,14 @@ public class Launcher extends Application {
             e.printStackTrace();
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("/com/uniquindio/crisdav/gestionventas/views/ClientesView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("/com/uniquindio/crisdav/gestionventas/views/LoginView.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Gestion BD");
         stage.setScene(scene);
         stage.show();
+    }
+    public static void main(String[] args) {
+        
+        launch(args);
     }
 }

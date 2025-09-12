@@ -1,13 +1,11 @@
 package com.uniquindio.crisdav.gestionventas.controllers;
 
-import com.uniquindio.crisdav.gestionventas.dao.VentaDAO;
 import com.uniquindio.crisdav.gestionventas.models.Cliente;
 import com.uniquindio.crisdav.gestionventas.models.DetalleVenta;
 import com.uniquindio.crisdav.gestionventas.models.Producto;
 import com.uniquindio.crisdav.gestionventas.models.Venta;
 import com.uniquindio.crisdav.gestionventas.dao.ClienteDAO;
 import com.uniquindio.crisdav.gestionventas.dao.ProductoDAO;
-import com.uniquindio.crisdav.gestionventas.dao.DetalleVentaDAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Controlador para la gestión de ventas en la interfaz JavaFX.
@@ -55,7 +52,6 @@ public class VentaController {
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private final ProductoDAO productoDAO = new ProductoDAO();
     // Eliminar campo duplicado de ventaDAO
-    private final DetalleVentaDAO detalleVentaDAO = new DetalleVentaDAO();
     private final ObservableList<DetalleVenta> detalles = FXCollections.observableArrayList();
 
     @FXML
@@ -69,8 +65,6 @@ public class VentaController {
     @FXML
     private TableColumn<Venta, Integer> colIdCliente;
 
-    private final VentaDAO ventaDAO = new VentaDAO();
-    private final ObservableList<Venta> ventas = FXCollections.observableArrayList();
 
 
     @FXML
