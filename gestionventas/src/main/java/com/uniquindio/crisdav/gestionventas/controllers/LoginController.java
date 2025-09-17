@@ -17,22 +17,19 @@ import javafx.util.Duration;
 public class LoginController {
     
     @FXML
-    private TextField apellidoRegistroLabel;
-
-    @FXML
-    private PasswordField cedulaConfirRegisLabel;
-
-    @FXML
     private PasswordField cedulaRegistroLabel;
+
+    @FXML
+    private TextField contrasenaConfirmarLabel;
+
+    @FXML
+    private PasswordField contrasenaRegistroLabel;
 
     @FXML
     private PasswordField contraseñaLoginLabel;
 
     @FXML
-    private Button crearVendedorButton;
-
-    @FXML
-    private TextField direccionRegistroLabel;
+    private Button crearUsuarioButton;
 
     @FXML
     private Button loginButton;
@@ -50,10 +47,10 @@ public class LoginController {
     private AnchorPane opcionPane;
 
     @FXML
-    private AnchorPane registroPane;
+    private Button registrarButton;
 
     @FXML
-    private Button regsitrarButton;
+    private AnchorPane registroPane;
 
     @FXML
     private Button tengoCuentaButton;
@@ -92,14 +89,14 @@ public class LoginController {
 
         TranslateTransition slider = new TranslateTransition();
 
-        if(event.getSource() == crearVendedorButton){
+        if(event.getSource() == crearUsuarioButton){
             slider.setNode(opcionPane);
             slider.setToX(300);
             slider.setDuration(Duration.seconds(.5));
 
             slider.setOnFinished((ActionEvent e) ->{
                 tengoCuentaButton.setVisible(true);
-                crearVendedorButton.setVisible(false);
+                crearUsuarioButton.setVisible(false);
             });
 
             slider.play();
@@ -110,7 +107,7 @@ public class LoginController {
 
             slider.setOnFinished((ActionEvent e) ->{
                 tengoCuentaButton.setVisible(false);
-                crearVendedorButton.setVisible(true);
+                crearUsuarioButton.setVisible(true);
             });
 
             slider.play();

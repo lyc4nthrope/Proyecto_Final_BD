@@ -80,15 +80,14 @@
                      </textFill>
                   </Label>
                   <TextField fx:id="nombreRegistroLabel" layoutX="45.0" layoutY="142.0" prefHeight="25.0" prefWidth="210.0" promptText="Nombre" />
-                  <PasswordField fx:id="cedulaRegistroLabel" layoutX="45.0" layoutY="207.0" prefHeight="25.0" prefWidth="210.0" promptText="Cedula" />
-                  <PasswordField fx:id="cedulaConfirRegisLabel" layoutX="46.0" layoutY="239.0" prefHeight="25.0" prefWidth="210.0" promptText="Confirmar cedula" />
-                  <TextField fx:id="direccionRegistroLabel" layoutX="46.0" layoutY="271.0" prefHeight="25.0" prefWidth="210.0" promptText="Dirección" />
-                  <Button fx:id="registrarButton" layoutX="45.0" layoutY="324.0" mnemonicParsing="false" onAction="#manejarRegistro" prefHeight="29.0" prefWidth="210.0" style="-fx-background-color: #28a745;" text="Crear">
+                  <PasswordField fx:id="cedulaRegistroLabel" layoutX="45.0" layoutY="175.0" prefHeight="25.0" prefWidth="210.0" promptText="Cedula" />
+                  <PasswordField fx:id="contrasenaRegistroLabel" layoutX="45.0" layoutY="209.0" prefHeight="25.0" prefWidth="210.0" promptText="Contraseña" />
+                  <TextField fx:id="contrasenaConfirmarLabel" layoutX="45.0" layoutY="241.0" prefHeight="25.0" prefWidth="210.0" promptText="Confirmar Contraseña" />
+                  <Button fx:id="registrarButton" layoutX="45.0" layoutY="278.0" mnemonicParsing="false" onAction="#manejarRegistro" prefHeight="29.0" prefWidth="210.0" style="-fx-background-color: #28a745;" text="Crear">
                      <font>
                         <Font name="Arial Black" size="12.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="apellidoRegistroLabel" layoutX="46.0" layoutY="175.0" prefHeight="25.0" prefWidth="210.0" promptText="Apellido" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="opcionPane" prefHeight="375.0" prefWidth="300.0" style="-fx-background-color: #007bff;">
@@ -98,7 +97,7 @@
                         <Font name="Arial Black" size="20.0" />
                      </font>
                   </Label>
-                  <Button fx:id="crearVendedorButton" layoutX="45.0" layoutY="315.0" mnemonicParsing="false" onAction="#registrarseBoton" prefHeight="29.0" prefWidth="210.0" style="-fx-background-color: #28a745;" text="Crear Nueva Cuenta">
+                  <Button fx:id="crearUsuarioButton" layoutX="45.0" layoutY="315.0" mnemonicParsing="false" onAction="#registrarseBoton" prefHeight="29.0" prefWidth="210.0" style="-fx-background-color: #28a745;" text="Crear Nueva Cuenta">
                      <font>
                         <Font name="Arial Black" size="12.0" />
                      </font>

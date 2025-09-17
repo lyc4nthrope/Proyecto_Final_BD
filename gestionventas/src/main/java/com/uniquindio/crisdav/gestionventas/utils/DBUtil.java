@@ -8,8 +8,8 @@ public class DBUtil {
 
     // URL basada en tu configuración
     private static final String URL = "jdbc:oracle:thin:@//localhost:1521/XEPDB1";
-    private static final String USER = "CRISTHIAN"; 
-    private static final String PASSWORD = "osorio"; 
+    private static final String USER = "felipe"; 
+    private static final String PASSWORD = "soley830"; 
 
     public static Connection getConnection() throws SQLException {
         try {
