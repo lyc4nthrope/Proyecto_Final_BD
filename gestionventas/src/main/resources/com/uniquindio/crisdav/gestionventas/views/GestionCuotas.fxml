@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controllers.CuotaController">
+    <top>
+        <HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Gestión de Cuotas" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Ver Morosos" onAction="#filtrarMorosos"/>
+            <Button text="Refrescar" onAction="#refrescar"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <TableView fx:id="tablaCuotas" prefHeight="300" onMouseClicked="#seleccionarCuota">
+                <columns>
+                    <TableColumn fx:id="colIdCuota" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colVentaCuota" text="ID Venta" prefWidth="80"/>
+                    <TableColumn fx:id="colClienteCuota" text="Cliente" prefWidth="180"/>
+                    <TableColumn fx:id="colNumero" text="#Cuota" prefWidth="60"/>
+                    <TableColumn fx:id="colVencimiento" text="Vencimiento" prefWidth="120"/>
+                    <TableColumn fx:id="colValorCuota" text="Valor" prefWidth="100"/>
+                    <TableColumn fx:id="colEstadoCuota" text="Estado" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10">
+                <Button text="Registrar Pago" onAction="#registrarPago"/>
+                <Button text="Marcar como Vencida" onAction="#marcarVencida"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

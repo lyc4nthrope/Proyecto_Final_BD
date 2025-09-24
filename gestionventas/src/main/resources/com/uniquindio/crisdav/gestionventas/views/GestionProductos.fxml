@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controllers.ProductoController">
+    <top>
+        <HBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Gestión de Productos" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="txtBuscarProducto" promptText="Buscar..." onKeyReleased="#buscarProducto"/>
+            <Button text="Nuevo" onAction="#nuevoProducto"/>
+            <Button text="Refrescar" onAction="#refrescar"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <TableView fx:id="tablaProductos" prefHeight="300" onMouseClicked="#seleccionarProducto">
+                <columns>
+                    <TableColumn fx:id="colIdProd" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colNombreProd" text="Nombre" prefWidth="180"/>
+                    <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="120"/>
+                    <TableColumn fx:id="colValorCompra" text="Valor Adq." prefWidth="100"/>
+                    <TableColumn fx:id="colValorVenta" text="Valor Venta" prefWidth="100"/>
+                    <TableColumn fx:id="colStock" text="Stock" prefWidth="80"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10">
+                <Label text="Nombre:"/>
+                <TextField fx:id="txtNombreProd" promptText="Nombre"/>
+                <Label text="Categoría:"/>
+                <ComboBox fx:id="cmbCategoria" promptText="Seleccione"/>
+                <Label text="Stock:"/>
+                <TextField fx:id="txtStock" promptText="Stock"/>
+                <Label text="Valor venta:"/>
+                <TextField fx:id="txtValorVenta" promptText="0.00"/>
+            </HBox>
+
+            <HBox spacing="10">
+                <Button fx:id="btnAgregarProd" text="Agregar" onAction="#agregarProducto"/>
+                <Button fx:id="btnEditarProd" text="Editar" onAction="#editarProducto"/>
+                <Button fx:id="btnEliminarProd" text="Eliminar" onAction="#eliminarProducto"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -8,6 +8,8 @@ module com.uniquindio.crisdav.gestionventas {
     exports com.uniquindio.crisdav.gestionventas;
     exports com.uniquindio.crisdav.gestionventas.controllers to javafx.fxml;
     opens com.uniquindio.crisdav.gestionventas.controllers to javafx.fxml;
-    exports com.uniquindio.crisdav.gestionventas.models;
-    opens com.uniquindio.crisdav.gestionventas.models to javafx.fxml;
+    exports com.uniquindio.crisdav.gestionventas.models.entity;
+    exports com.uniquindio.crisdav.gestionventas.models.enums;
+    opens com.uniquindio.crisdav.gestionventas.models.entity to javafx.fxml;
+    opens com.uniquindio.crisdav.gestionventas.models.enums to javafx.fxml;
 }

@@ -3,3 +3,6 @@
 --Sirve para que todos tengan registros base y no trabajen con la BD vacía.
 
 --Se usa mucho en pruebas y demos.
+INSERT INTO USUARIO (id_usuario, username, password, rol) VALUES (1, 'admin', 'admin123', 'ADMIN');
+INSERT INTO USUARIO (id_usuario, username, password, rol) VALUES (2, 'David', 'david123', 'USUARIO');
+COMMIT;

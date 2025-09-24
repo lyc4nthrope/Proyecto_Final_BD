@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controllers.UsuarioController">
+    <top>
+        <HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Usuarios y Roles" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Nuevo Usuario" onAction="#nuevoUsuario"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <TableView fx:id="tablaUsuarios" prefHeight="220" onMouseClicked="#seleccionarUsuario">
+                <columns>
+                    <TableColumn fx:id="colIdUser" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colUsername" text="Usuario" prefWidth="140"/>
+                    <TableColumn fx:id="colNombreUser" text="Nombre" prefWidth="180"/>
+                    <TableColumn fx:id="colRol" text="Rol" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <GridPane hgap="8" vgap="8">
+                <Label text="Usuario:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtUsername" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Nombre:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="txtNombreUser" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Contraseña:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <PasswordField fx:id="txtPassword" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label text="Rol:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="cmbRol" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button text="Agregar" onAction="#agregarUsuario"/>
+                <Button text="Editar" onAction="#editarUsuario"/>
+                <Button text="Eliminar" onAction="#eliminarUsuario"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

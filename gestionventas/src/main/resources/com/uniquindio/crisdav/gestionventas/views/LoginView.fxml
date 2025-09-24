@@ -80,9 +80,9 @@
                      </textFill>
                   </Label>
                   <TextField fx:id="nombreRegistroLabel" layoutX="45.0" layoutY="142.0" prefHeight="25.0" prefWidth="210.0" promptText="Nombre" />
-                  <PasswordField fx:id="cedulaRegistroLabel" layoutX="45.0" layoutY="175.0" prefHeight="25.0" prefWidth="210.0" promptText="Cedula" />
+                  <TextField fx:id="cedulaRegistroLabel" layoutX="45.0" layoutY="175.0" prefHeight="25.0" prefWidth="210.0" promptText="Cedula" />
                   <PasswordField fx:id="contrasenaRegistroLabel" layoutX="45.0" layoutY="209.0" prefHeight="25.0" prefWidth="210.0" promptText="Contraseña" />
-                  <TextField fx:id="contrasenaConfirmarLabel" layoutX="45.0" layoutY="241.0" prefHeight="25.0" prefWidth="210.0" promptText="Confirmar Contraseña" />
+                  <PasswordField fx:id="contrasenaConfirmarLabel" layoutX="45.0" layoutY="241.0" prefHeight="25.0" prefWidth="210.0" promptText="Confirmar Contraseña" />
                   <Button fx:id="registrarButton" layoutX="45.0" layoutY="278.0" mnemonicParsing="false" onAction="#manejarRegistro" prefHeight="29.0" prefWidth="210.0" style="-fx-background-color: #28a745;" text="Crear">
                      <font>
                         <Font name="Arial Black" size="12.0" />

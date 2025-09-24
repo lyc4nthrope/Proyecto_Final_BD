@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.uniquindio.crisdav.gestionventas.controllers.ReporteController">
+    <top>
+        <HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <Label text="Reportes" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <GridPane hgap="8" vgap="8">
+                <Label text="Desde:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <DatePicker fx:id="dpDesde" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Hasta:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                <DatePicker fx:id="dpHasta" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button text="Ventas Mensuales" onAction="#generarVentasMensuales"/>
+                <Button text="IVA Trimestral" onAction="#generarIvaTrimestral"/>
+                <Button text="Inventario por Categoría" onAction="#generarInventarioCategoria"/>
+                <Button text="Clientes Morosos" onAction="#generarMorosos"/>
+            </HBox>
+
+            <TableView fx:id="tablaReporte" prefHeight="360">
+                <!-- columnas dinámicas según reporte -->
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>
