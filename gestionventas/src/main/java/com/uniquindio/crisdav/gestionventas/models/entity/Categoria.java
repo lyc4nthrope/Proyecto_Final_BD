@@ -51,6 +51,7 @@ public class Categoria implements Serializable {
     public BigDecimal getIva() { return iva; }
     public void setIva(BigDecimal iva) { this.iva = iva; }
 
+    
     public BigDecimal getUtilidad() { return utilidad; }
     public void setUtilidad(BigDecimal utilidad) { this.utilidad = utilidad; }
 
