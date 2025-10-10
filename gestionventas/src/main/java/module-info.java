@@ -6,6 +6,4 @@ module com.uniquindio.crisdav.gestionventas {
 
     opens com.uniquindio.crisdav.gestionventas to javafx.fxml;
     exports com.uniquindio.crisdav.gestionventas;
-    exports com.uniquindio.crisdav.gestionventas.models.enums;
-    opens com.uniquindio.crisdav.gestionventas.models.enums to javafx.fxml;
 }
