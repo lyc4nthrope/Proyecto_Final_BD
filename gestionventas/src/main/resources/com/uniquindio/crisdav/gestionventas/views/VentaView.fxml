@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.collections.FXCollections?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.VentaViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="💰 Nueva Venta" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Información del Cliente -->
+    <VBox spacing="10" style="-fx-border-color: #dee2e6; -fx-border-radius: 5; -fx-padding: 15;">
+        <Label text="Información del Cliente" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+        
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Cédula:" style="-fx-min-width: 100;"/>
+            <TextField fx:id="txtCedulaCliente" promptText="Buscar por cédula" prefWidth="200"/>
+            <Button text="🔍 Buscar" onAction="#buscarCliente" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+            <Button text="➕ Nuevo Cliente" onAction="#nuevoCliente" style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+        </HBox>
+        
+        <GridPane hgap="10" vgap="10">
+            <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblNombreCliente" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <Label text="Teléfono:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblTelefonoCliente" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            
+            <Label text="Crédito Activo:" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblCreditoActivo" text="-" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+        </GridPane>
+    </VBox>
+
+    <!-- Tipo de Venta -->
+    <HBox spacing="20" alignment="CENTER_LEFT">
+        <Label text="Tipo de Venta:" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+        <RadioButton fx:id="rbContado" text="Contado" toggleGroup="$tipoVenta" selected="true"/>
+        <RadioButton fx:id="rbCredito" text="Crédito" toggleGroup="$tipoVenta"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <!-- Cuotas (solo visible para crédito) -->
+        <Label fx:id="lblCuotas" text="Número de Cuotas:" visible="false" managed="false"/>
+        <ComboBox fx:id="comboCuotas" visible="false" managed="false" prefWidth="100"/>
+    </HBox>
+
+    <!-- Agregar Productos -->
+    <VBox spacing="10" style="-fx-border-color: #dee2e6; -fx-border-radius: 5; -fx-padding: 15;">
+        <Label text="Agregar Productos" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+        
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Código:" style="-fx-min-width: 80;"/>
+            <TextField fx:id="txtCodigoProducto" promptText="Código del producto" prefWidth="150"/>
+            <Button text="🔍" onAction="#buscarProducto" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+            
+            <Label text="Cantidad:" style="-fx-min-width: 80;"/>
+            <Spinner fx:id="spinCantidad" prefWidth="100" editable="true"/>
+            
+            <Button text="➕ Agregar" onAction="#agregarProducto" 
+                    style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+        
+        <HBox spacing="10">
+            <Label text="Producto:" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblProductoSeleccionado" text="Ninguno"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Precio:" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblPrecioProducto" text=" $0.00"/>
+            <Label text="Stock:" style="-fx-font-weight: bold;"/>
+            <Label fx:id="lblStockProducto" text="0"/>
+        </HBox>
+    </VBox>
+
+    <!-- Tabla de Productos -->
+    <VBox spacing="5" VBox.vgrow="ALWAYS">
+        <Label text="Productos en la Venta" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+        <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="Código" prefWidth="100" fx:id="colCodigo"/>
+                <TableColumn text="Producto" prefWidth="250" fx:id="colNombre"/>
+                <TableColumn text="Cantidad" prefWidth="80" fx:id="colCantidad"/>
+                <TableColumn text="Precio Unit." prefWidth="120" fx:id="colPrecio"/>
+                <TableColumn text="IVA" prefWidth="80" fx:id="colIva"/>
+                <TableColumn text="Subtotal" prefWidth="120" fx:id="colSubtotal"/>
+                <TableColumn text="Acciones" prefWidth="100" fx:id="colAcciones"/>
+            </columns>
+        </TableView>
+        <Button text="🗑️ Eliminar Seleccionado" onAction="#eliminarProducto" 
+                style="-fx-background-color: #dc3545; -fx-text-fill: white;"/>
+    </VBox>
+
+    <!-- Totales -->
+    <VBox spacing="5" style="-fx-border-color: #28a745; -fx-border-width: 2; -fx-border-radius: 5; -fx-padding: 15; -fx-background-color: #f8f9fa;">
+        <HBox spacing="20">
+            <Region HBox.hgrow="ALWAYS"/>
+            <VBox spacing="5" alignment="CENTER_RIGHT">
+                <HBox spacing="10">
+                    <Label text="Subtotal:" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                    <Label fx:id="lblSubtotal" text=" $0.00" style="-fx-font-size: 14;"/>
+                </HBox>
+                <HBox spacing="10">
+                    <Label text="IVA:" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                    <Label fx:id="lblIva" text=" $0.00" style="-fx-font-size: 14;"/>
+                </HBox>
+                <Separator prefWidth="200"/>
+                <HBox spacing="10">
+                    <Label text="TOTAL:" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #28a745;"/>
+                    <Label fx:id="lblTotal" text=" $0.00" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #28a745;"/>
+                </HBox>
+                
+                <!-- Info Crédito -->
+                <VBox fx:id="infoCreditoBox" spacing="5" visible="false" managed="false" 
+                      style="-fx-border-color: #ffc107; -fx-border-width: 1; -fx-padding: 10; -fx-background-color: #fff3cd;">
+                    <HBox spacing="10">
+                        <Label text="Cuota Inicial (30%):" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="lblCuotaInicial" text=" $0.00"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Saldo a Financiar (70% + 5%):" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="lblSaldoFinanciar" text=" $0.00"/>
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Valor Cuota Mensual:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="lblValorCuota" text=" $0.00"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Botones de Acción -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="💾 Procesar Venta" onAction="#procesarVenta" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 10 30;"/>
+        <Button text="🧹 Limpiar" onAction="#limpiarFormulario" 
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 10 30;"/>
+        <Button text="❌ Cancelar" onAction="#cancelar" 
+                style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 16; -fx-padding: 10 30;"/>
+    </HBox>
+
+</VBox>

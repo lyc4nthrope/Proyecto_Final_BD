@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.uniquindio.crisdav.gestionventas.controllers.MainViewController">
+    
+    <!-- Top Menu Bar -->
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Archivo">
+                    <MenuItem text="Cerrar Sesión" onAction="#cerrarSesion"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Salir" onAction="#salir"/>
+                </Menu>
+                
+                <Menu text="Gestión" fx:id="menuGestion">
+                    <MenuItem text="Productos" onAction="#mostrarProductos"/>
+                    <MenuItem text="Clientes" onAction="#mostrarClientes"/>
+                    <MenuItem text="Vendedores" onAction="#mostrarVendedores"/>
+                    <MenuItem text="Categorías" onAction="#mostrarCategorias"/>
+                </Menu>
+                
+                <Menu text="Ventas">
+                    <MenuItem text="Nueva Venta" onAction="#mostrarNuevaVenta"/>
+                    <MenuItem text="Historial de Ventas" onAction="#mostrarHistorialVentas"/>
+                    <MenuItem text="Gestionar Cuotas" onAction="#mostrarGestionCuotas"/>
+                </Menu>
+                
+                <Menu text="Reportes">
+                    <MenuItem text="Reporte de IVA" onAction="#mostrarReporteIVA"/>
+                    <MenuItem text="Inventario" onAction="#mostrarInventario"/>
+                    <MenuItem text="Clientes Morosos" onAction="#mostrarClientesMorosos"/>
+                    <MenuItem text="Estadísticas de Ventas" onAction="#mostrarEstadisticas"/>
+                </Menu>
+                
+                <Menu text="Administración" fx:id="menuAdmin">
+                    <MenuItem text="Gestionar Usuarios" onAction="#mostrarUsuarios"/>
+                    <MenuItem text="Auditoría" onAction="#mostrarAuditoria"/>
+                </Menu>
+                
+                <Menu text="Ayuda">
+                    <MenuItem text="Acerca de" onAction="#mostrarAcercaDe"/>
+                </Menu>
+            </MenuBar>
+            
+            <!-- Barra de información del usuario -->
+            <HBox style="-fx-background-color: #007bff; -fx-padding: 10;" spacing="20">
+                <Label text="Usuario:" textFill="white" style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblUsuario" textFill="white"/>
+                <Label text="Nivel:" textFill="white" style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblNivel" textFill="white"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblFechaHora" textFill="white"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Left Sidebar -->
+    <left>
+        <VBox spacing="10" style="-fx-background-color: #f8f9fa; -fx-padding: 15;">
+            <Label text="Menú Principal" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            <Separator/>
+            
+            <Button text="🏠 Inicio" onAction="#mostrarInicio" maxWidth="Infinity" 
+                    style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+            
+            <Label text="Ventas" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <Button text="💰 Nueva Venta" onAction="#mostrarNuevaVenta" maxWidth="Infinity"/>
+            <Button text="📋 Historial" onAction="#mostrarHistorialVentas" maxWidth="Infinity"/>
+            <Button text="💳 Gestionar Cuotas" onAction="#mostrarGestionCuotas" maxWidth="Infinity"/>
+            
+            <Label text="Gestión" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <Button text="📦 Productos" onAction="#mostrarProductos" maxWidth="Infinity"/>
+            <Button text="👥 Clientes" onAction="#mostrarClientes" maxWidth="Infinity"/>
+            <Button text="👤 Vendedores" onAction="#mostrarVendedores" maxWidth="Infinity"/>
+            
+            <Label text="Reportes" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <Button text="📊 Reportes IVA" onAction="#mostrarReporteIVA" maxWidth="Infinity"/>
+            <Button text="📈 Estadísticas" onAction="#mostrarEstadisticas" maxWidth="Infinity"/>
+            <Button text="⚠️ Morosos" onAction="#mostrarClientesMorosos" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    
+    <!-- Center Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: white;">
+            <VBox alignment="CENTER" spacing="20">
+                <Label text="Bienvenido al Sistema de Gestión de Ventas" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+                <Label text="Seleccione una opción del menú para comenzar" style="-fx-font-size: 14;"/>
+                
+                <!-- Dashboard Cards -->
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #007bff; -fx-padding: 30; -fx-background-radius: 10;">
+                        <Label text="Ventas Hoy" textFill="white" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblVentasHoy" text="0" textFill="white" style="-fx-font-size: 32; -fx-font-weight: bold;"/>
+                    </VBox>
+                    
+                    <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #28a745; -fx-padding: 30; -fx-background-radius: 10;">
+                        <Label text="Total del Mes" textFill="white" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblTotalMes" text=" $0" textFill="white" style="-fx-font-size: 32; -fx-font-weight: bold;"/>
+                    </VBox>
+                    
+                    <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #ffc107; -fx-padding: 30; -fx-background-radius: 10;">
+                        <Label text="Cuotas Vencidas" textFill="white" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblCuotasVencidas" text="0" textFill="white" style="-fx-font-size: 32; -fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </StackPane>
+    </center>
+    
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <HBox style="-fx-background-color: #343a40; -fx-padding: 5 10;" spacing="20">
+            <Label text="Sistema de Gestión de Ventas v1.0" textFill="white" style="-fx-font-size: 11;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblStatus" text="Listo" textFill="white" style="-fx-font-size: 11;"/>
+        </HBox>
+    </bottom>
+    
+</BorderPane>
