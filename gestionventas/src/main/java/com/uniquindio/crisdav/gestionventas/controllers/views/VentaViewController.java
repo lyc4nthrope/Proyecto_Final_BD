@@ -2,9 +2,12 @@ package com.uniquindio.crisdav.gestionventas.controllers.views;
 
 import com.uniquindio.crisdav.gestionventas.controllers.*;
 import com.uniquindio.crisdav.gestionventas.models.entity.*;
+import com.uniquindio.crisdav.gestionventas.utils.ValidadorUtil;
 import com.uniquindio.crisdav.gestionventas.models.vo.ProductoConCategoriaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
 import com.uniquindio.crisdav.gestionventas.utils.SessionManager;
+import com.uniquindio.crisdav.gestionventas.models.vo.ClienteFormResult;
+import javafx.geometry.Insets;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -172,8 +176,28 @@ public class VentaViewController {
 
     @FXML
     private void nuevoCliente(ActionEvent event) {
-        // Aquí podrías abrir un diálogo para crear cliente
-        mostrarAlerta("Información", "Funcionalidad de nuevo cliente por implementar", Alert.AlertType.INFORMATION);
+        Dialog<ClienteFormResult> dialog = crearDialogoCliente(null);
+        Optional<ClienteFormResult> resultado = dialog.showAndWait();
+        
+        resultado.ifPresent(form -> {
+            try {
+                clienteController.crearCliente(
+                    form.getCedula(),
+                    form.getNombre(),
+                    form.getDireccion(),
+                    form.getTelefono(),
+                    form.getCorreo()
+                );
+                
+                mostrarAlerta("Éxito", "Cliente creado correctamente", Alert.AlertType.INFORMATION);
+                
+            } catch (SQLException e) {
+                mostrarAlerta("Error", "Error al crear cliente:\n" + e.getMessage(), Alert.AlertType.ERROR);
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                mostrarAlerta("Error de Validación", e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
     }
 
     @FXML
@@ -504,5 +528,93 @@ public class VentaViewController {
         public BigDecimal getPrecioUnitario() { return precioUnitario; }
         public BigDecimal getIva() { return iva; }
         public BigDecimal getSubtotal() { return subtotal; }
+    }
+
+    private Dialog<ClienteFormResult> crearDialogoCliente(Cliente clienteExistente) {
+        Dialog<ClienteFormResult> dialog = new Dialog<>();
+        dialog.setTitle(clienteExistente == null ? "Nuevo Cliente" : "Editar Cliente");
+        dialog.setHeaderText(clienteExistente == null ? 
+            "Ingrese los datos del nuevo cliente" : 
+            "Modifique los datos del cliente");
+
+        // Botones
+        ButtonType btnGuardar = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(btnGuardar, ButtonType.CANCEL);
+
+        // Crear formulario
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField txtCedula = new TextField();
+        TextField txtNombre = new TextField();
+        TextField txtDireccion = new TextField();
+        TextField txtTelefono = new TextField();
+        TextField txtCorreo = new TextField();
+
+        // Si es edición, llenar datos
+        if (clienteExistente != null) {
+            txtCedula.setText(clienteExistente.getCedula());
+            txtNombre.setText(clienteExistente.getNombre());
+            txtDireccion.setText(clienteExistente.getDireccion());
+            txtTelefono.setText(clienteExistente.getTelefono());
+            txtCorreo.setText(clienteExistente.getCorreo());
+        }
+
+        // Agregar campos al grid
+        grid.add(new Label("Cédula:*"), 0, 0);
+        grid.add(txtCedula, 1, 0);
+        grid.add(new Label("Nombre Completo:*"), 0, 1);
+        grid.add(txtNombre, 1, 1);
+        grid.add(new Label("Dirección:"), 0, 2);
+        grid.add(txtDireccion, 1, 2);
+        grid.add(new Label("Teléfono:*"), 0, 3);
+        grid.add(txtTelefono, 1, 3);
+        grid.add(new Label("Correo Electrónico:"), 0, 4);
+        grid.add(txtCorreo, 1, 4);
+        
+        Label lblInfo = new Label("* Campos obligatorios");
+        lblInfo.setStyle("-fx-font-size: 10; -fx-text-fill: #666;");
+        grid.add(lblInfo, 0, 5, 2, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convertir resultado
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == btnGuardar) {
+                String cedula = txtCedula.getText().trim();
+                String nombre = txtNombre.getText().trim();
+                String direccion = txtDireccion.getText().trim();
+                String telefono = txtTelefono.getText().trim();
+                String correo = txtCorreo.getText().trim();
+
+                // Validaciones
+                if (cedula.isEmpty() || nombre.isEmpty() || telefono.isEmpty()) {
+                    mostrarAlerta("Error", "Cédula, nombre y teléfono son obligatorios", Alert.AlertType.ERROR);
+                    return null;
+                }
+
+                if (!ValidadorUtil.esCedulaValida(cedula)) {
+                    mostrarAlerta("Error", "Cédula inválida (debe tener 6-10 dígitos)", Alert.AlertType.ERROR);
+                    return null;
+                }
+
+                if (!ValidadorUtil.esTelefonoValido(telefono)) {
+                    mostrarAlerta("Error", "Teléfono inválido (debe tener 7-10 dígitos)", Alert.AlertType.ERROR);
+                    return null;
+                }
+
+                if (!correo.isEmpty() && !ValidadorUtil.esEmailValido(correo)) {
+                    mostrarAlerta("Error", "Correo electrónico inválido", Alert.AlertType.ERROR);
+                    return null;
+                }
+
+                return new ClienteFormResult(cedula, nombre, direccion, telefono, correo);
+            }
+            return null;
+        });
+
+        return dialog;
     }
 }

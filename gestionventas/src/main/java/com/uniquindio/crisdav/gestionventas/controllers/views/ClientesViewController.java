@@ -6,6 +6,7 @@ import com.uniquindio.crisdav.gestionventas.models.entity.Cliente;
 import com.uniquindio.crisdav.gestionventas.models.entity.Venta;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
 import com.uniquindio.crisdav.gestionventas.utils.ValidadorUtil;
+import com.uniquindio.crisdav.gestionventas.models.vo.ClienteFormResult;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -206,11 +207,11 @@ public class ClientesViewController {
         resultado.ifPresent(form -> {
             try {
                 clienteController.crearCliente(
-                    form.cedula,
-                    form.nombre,
-                    form.direccion,
-                    form.telefono,
-                    form.correo
+                    form.getCedula(),
+                    form.getNombre(),
+                    form.getDireccion(),
+                    form.getTelefono(),
+                    form.getCorreo()
                 );
                 
                 mostrarAlerta("Éxito", "Cliente creado correctamente", Alert.AlertType.INFORMATION);
@@ -231,11 +232,11 @@ public class ClientesViewController {
         
         resultado.ifPresent(form -> {
             try {
-                cliente.setCedula(form.cedula);
-                cliente.setNombre(form.nombre);
-                cliente.setDireccion(form.direccion);
-                cliente.setTelefono(form.telefono);
-                cliente.setCorreo(form.correo);
+                cliente.setCedula(form.getCedula());
+                cliente.setNombre(form.getNombre());
+                cliente.setDireccion(form.getDireccion());
+                cliente.setTelefono(form.getTelefono());
+                cliente.setCorreo(form.getCorreo());
                 
                 clienteController.actualizarCliente(cliente);
                 
@@ -454,22 +455,5 @@ public class ClientesViewController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    // Clase auxiliar para resultado del formulario
-    private static class ClienteFormResult {
-        String cedula;
-        String nombre;
-        String direccion;
-        String telefono;
-        String correo;
-
-        ClienteFormResult(String cedula, String nombre, String direccion, String telefono, String correo) {
-            this.cedula = cedula;
-            this.nombre = nombre;
-            this.direccion = direccion;
-            this.telefono = telefono;
-            this.correo = correo;
-        }
     }
 }
