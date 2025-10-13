@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.controllers;
+package com.uniquindio.crisdav.gestionventas.controllers.views;
 
 import com.uniquindio.crisdav.gestionventas.controllers.UsuarioController;
 import com.uniquindio.crisdav.gestionventas.models.entity.Usuario;
@@ -17,7 +17,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LoginController {
+public class LoginViewController {
 
     @FXML private AnchorPane loginPane;
     @FXML private AnchorPane registroPane;

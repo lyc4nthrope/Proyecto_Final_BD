@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.GestionCuotasViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="💳 Gestión de Cuotas y Créditos" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔄 Actualizar Vencidas" onAction="#actualizarVencidas" 
+                style="-fx-background-color: #ffc107; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;"/>
+        <Button text="🔄 Recargar" onAction="#cargarCreditosActivos" 
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Búsqueda y Filtros -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
+        <Label text="🔍 Buscar Cliente:" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+        <TextField fx:id="txtBuscarCliente" promptText="Cédula o nombre del cliente..." prefWidth="300"/>
+        <Button text="Buscar" onAction="#buscarCliente" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+        <Separator orientation="VERTICAL"/>
+        <Label text="Estado:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="comboEstado" prefWidth="150" onAction="#aplicarFiltros"></ComboBox>
+    </HBox>
+
+    <!-- Panel dividido: Créditos | Cuotas -->
+    <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
+        
+        <!-- Panel Izquierdo: Lista de Créditos Activos -->
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="📋 Créditos Activos" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            
+            <TableView fx:id="tablaCreditosActivos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn text="ID" prefWidth="50" fx:id="colCreditoId"/>
+                    <TableColumn text="Cliente" prefWidth="150" fx:id="colCliente"/>
+                    <TableColumn text="Fecha" prefWidth="90" fx:id="colFechaVenta"/>
+                    <TableColumn text="Total" prefWidth="100" fx:id="colTotal"/>
+                    <TableColumn text="Saldo" prefWidth="100" fx:id="colSaldo"/>
+                    <TableColumn text="Cuotas" prefWidth="70" fx:id="colNumCuotas"/>
+                </columns>
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="💳" style="-fx-font-size: 36;"/>
+                        <Label text="No hay créditos activos" style="-fx-font-size: 14;"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+            
+            <!-- Info del crédito seleccionado -->
+            <VBox spacing="8" style="-fx-border-color: #007bff; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: #e7f3ff; -fx-border-radius: 5; -fx-background-radius: 5;">
+                <Label text="ℹ️ Información del Crédito" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+                <GridPane hgap="10" vgap="5">
+                    <Label text="Cliente:" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblInfoCliente" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                    
+                    <Label text="Cuota Inicial:" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblCuotaInicial" text=" $0.00" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    
+                    <Label text="Total Financiado:" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblTotalFinanciado" text=" $0.00" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    
+                    <Label text="Saldo Pendiente:" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblSaldoPendiente" text=" $0.00" GridPane.columnIndex="1" GridPane.rowIndex="3" style="-fx-font-size: 14; -fx-text-fill: #dc3545; -fx-font-weight: bold;"/>
+                </GridPane>
+            </VBox>
+        </VBox>
+        
+        <!-- Panel Derecho: Detalle de Cuotas -->
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="📅 Detalle de Cuotas" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            
+            <TableView fx:id="tablaCuotas" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn text="N°" prefWidth="40" fx:id="colNumCuota" style="-fx-alignment: CENTER;"/>
+                    <TableColumn text="Fecha Venc." prefWidth="100" fx:id="colFechaVenc"/>
+                    <TableColumn text="Fecha Pago" prefWidth="100" fx:id="colFechaPago"/>
+                    <TableColumn text="Valor" prefWidth="100" fx:id="colValorCuota"/>
+                    <TableColumn text="Estado" prefWidth="100" fx:id="colEstadoCuota"/>
+                    <TableColumn text="Acciones" prefWidth="100" fx:id="colAccionesCuota"/>
+                </columns>
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="📅" style="-fx-font-size: 36;"/>
+                        <Label text="Seleccione un crédito" style="-fx-font-size: 14;"/>
+                        <Label text="para ver sus cuotas" style="-fx-font-size: 12; -fx-text-fill: #666;"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+            
+            <!-- Resumen de cuotas -->
+            <HBox spacing="20" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Pendientes" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblCuotasPendientes" text="0" style="-fx-font-size: 20; -fx-text-fill: #ffc107; -fx-font-weight: bold;"/>
+                </VBox>
+                <Separator orientation="VERTICAL"/>
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Pagadas" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblCuotasPagadas" text="0" style="-fx-font-size: 20; -fx-text-fill: #28a745; -fx-font-weight: bold;"/>
+                </VBox>
+                <Separator orientation="VERTICAL"/>
+                <VBox spacing="5" alignment="CENTER">
+                    <Label text="Vencidas" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblCuotasVencidas" text="0" style="-fx-font-size: 20; -fx-text-fill: #dc3545; -fx-font-weight: bold;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox spacing="5" alignment="CENTER_RIGHT">
+                    <Label text="Total a Pagar" style="-fx-font-weight: bold;"/>
+                    <Label fx:id="lblTotalAPagar" text=" $0.00" style="-fx-font-size: 18; -fx-text-fill: #007bff; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+        
+    </SplitPane>
+
+    <!-- Estadísticas Generales -->
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10; -fx-background-color: #e9ecef; -fx-background-radius: 5;">
+        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #007bff; -fx-padding: 15; -fx-background-radius: 5; -fx-min-width: 150;">
+            <Label text="Total Créditos" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalCreditos" text="0" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #28a745; -fx-padding: 15; -fx-background-radius: 5; -fx-min-width: 150;">
+            <Label text="Monto Total" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Label fx:id="lblMontoTotal" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #ffc107; -fx-padding: 15; -fx-background-radius: 5; -fx-min-width: 150;">
+            <Label text="Saldo Pendiente" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Label fx:id="lblSaldoTotalPendiente" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #dc3545; -fx-padding: 15; -fx-background-radius: 5; -fx-min-width: 150;">
+            <Label text="Cuotas Vencidas" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalCuotasVencidas" text="0" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

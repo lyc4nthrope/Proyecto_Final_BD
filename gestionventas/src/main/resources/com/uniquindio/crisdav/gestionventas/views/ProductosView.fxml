@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.ProductosViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="📦 Gestión de Productos" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Nuevo Producto" onAction="#nuevoProducto" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Búsqueda -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Buscar:" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtBuscar" promptText="Buscar por código o nombre" prefWidth="300"/>
+        <Button text="🔍 Buscar" onAction="#buscar" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+        <Button text="🔄 Actualizar" onAction="#cargarProductos" style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- Tabla de Productos -->
+    <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" prefWidth="50" fx:id="colId"/>
+            <TableColumn text="Código" prefWidth="100" fx:id="colCodigo"/>
+            <TableColumn text="Nombre" prefWidth="200" fx:id="colNombre"/>
+            <TableColumn text="Categoría" prefWidth="120" fx:id="colCategoria"/>
+            <TableColumn text="Valor Adq." prefWidth="100" fx:id="colValorAdq"/>
+            <TableColumn text="Valor Venta" prefWidth="100" fx:id="colValorVenta"/>
+            <TableColumn text="Stock" prefWidth="80" fx:id="colStock"/>
+            <TableColumn text="IVA" prefWidth="70" fx:id="colIva"/>
+            <TableColumn text="Acciones" prefWidth="150" fx:id="colAcciones"/>
+        </columns>
+    </TableView>
+
+    <!-- Información -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #f8f9fa;">
+        <Label text="Total de productos:" style="-fx-font-weight: bold;"/>
+        <Label fx:id="lblTotalProductos" text="0"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="Productos con stock bajo menor a 10:" style="-fx-font-weight: bold; -fx-text-fill: #dc3545;"/>
+        <Label fx:id="lblStockBajo" text="0" style="-fx-text-fill: #dc3545;"/>
+    </HBox>
+
+</VBox>

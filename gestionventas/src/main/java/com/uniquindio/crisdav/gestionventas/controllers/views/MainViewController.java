@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.controllers;
+package com.uniquindio.crisdav.gestionventas.controllers.views;
 
 import com.uniquindio.crisdav.gestionventas.controllers.CuotaController;
 import com.uniquindio.crisdav.gestionventas.controllers.ReporteController;

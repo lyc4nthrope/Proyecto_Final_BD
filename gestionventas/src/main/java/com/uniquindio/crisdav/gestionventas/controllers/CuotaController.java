@@ -135,4 +135,11 @@ public class CuotaController {
     public VentaCredito obtenerVentaCredito(Integer idVentaCredito) throws SQLException {
         return ventaCreditoDAO.buscarPorId(idVentaCredito);
     }
+
+    /**
+     * Obtener todos los créditos con saldo pendiente
+     */
+    public List<VentaCredito> obtenerVentasCredito() throws SQLException {
+        return ventaCreditoDAO.listarConSaldoPendiente();
+    }
 }
