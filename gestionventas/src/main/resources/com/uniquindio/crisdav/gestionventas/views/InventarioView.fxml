@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.PieChart?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.InventarioViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="📊 Reporte de Inventario" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔄 Actualizar" onAction="#cargarInventario" 
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;"/>
+        <Button text="📄 Exportar Excel" onAction="#exportarExcel" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15; -fx-font-weight: bold;"/>
+        <Button text="🖨️ Imprimir" onAction="#imprimirReporte" 
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Filtros y Opciones -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
+        <Label text="📦 Filtrar por Categoría:" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+        <ComboBox fx:id="comboCategoriaFiltro" prefWidth="180" onAction="#aplicarFiltro"></ComboBox>
+        
+        <Separator orientation="VERTICAL"/>
+        
+        <CheckBox fx:id="chkStockBajo" text="Mostrar solo stock bajo (menor a 10)" onAction="#aplicarFiltro"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Label fx:id="lblFechaReporte" text="Fecha: 15/10/2024" style="-fx-font-size: 11; -fx-text-fill: #666;"/>
+    </HBox>
+
+    <!-- Panel dividido: Tabla | Gráfico -->
+    <SplitPane dividerPositions="0.65" VBox.vgrow="ALWAYS">
+        
+        <!-- Panel Izquierdo: Tabla de Inventario -->
+        <VBox spacing="10" style="-fx-padding: 5;">
+            <Label text="📋 Detalle de Inventario" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            
+            <TableView fx:id="tablaInventario" VBox.vgrow="ALWAYS" style="-fx-font-size: 12;">
+                <columns>
+                    <TableColumn text="Categoría" prefWidth="110" fx:id="colCategoria" style="-fx-alignment: CENTER;"/>
+                    <TableColumn text="Código" prefWidth="100" fx:id="colCodigo"/>
+                    <TableColumn text="Nombre" prefWidth="220" fx:id="colNombre"/>
+                    <TableColumn text="Stock" prefWidth="80" fx:id="colStock" style="-fx-alignment: CENTER;"/>
+                    <TableColumn text="Valor Adquisición" prefWidth="130" fx:id="colValorAdq" style="-fx-alignment: CENTER_RIGHT;"/>
+                    <TableColumn text="Costo Total" prefWidth="130" fx:id="colCostoTotal" style="-fx-alignment: CENTER_RIGHT;"/>
+                </columns>
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="📦" style="-fx-font-size: 48;"/>
+                        <Label text="No hay productos en inventario" style="-fx-font-size: 16; -fx-text-fill: #666;"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+            
+            <!-- Resumen por categorías -->
+            <VBox spacing="8" style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-radius: 5; -fx-background-radius: 5;">
+                <Label text="💰 Resumen por Categoría" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+                <GridPane fx:id="gridResumenCategorias" hgap="15" vgap="5">
+                    <!-- Se llenará dinámicamente -->
+                </GridPane>
+            </VBox>
+        </VBox>
+        
+        <!-- Panel Derecho: Gráfico y Estadísticas -->
+        <VBox spacing="15" style="-fx-padding: 5;">
+            <Label text="📈 Distribución del Inventario" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+            
+            <!-- Gráfico de pastel -->
+            <PieChart fx:id="graficoInventario" legendVisible="true" prefHeight="300"/>
+            
+            <!-- Alertas de Stock -->
+            <VBox spacing="10" style="-fx-border-color: #ffc107; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: #fff3cd; -fx-border-radius: 5; -fx-background-radius: 5;">
+                <Label text="⚠️ Alertas de Stock Bajo" style="-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #856404;"/>
+                <ScrollPane fitToWidth="true" prefHeight="150" style="-fx-background-color: transparent;">
+                    <VBox fx:id="vboxAlertasStock" spacing="5" style="-fx-background-color: transparent;"/>
+                </ScrollPane>
+            </VBox>
+            
+            <!-- Top 5 Productos con Más Valor -->
+            <VBox spacing="10" style="-fx-border-color: #007bff; -fx-border-width: 2; -fx-padding: 10; -fx-background-color: #e7f3ff; -fx-border-radius: 5; -fx-background-radius: 5;">
+                <Label text="💎 Top 5 - Mayor Valor en Inventario" style="-fx-font-weight: bold; -fx-font-size: 13; -fx-text-fill: #004085;"/>
+                <VBox fx:id="vboxTop5" spacing="5"/>
+            </VBox>
+        </VBox>
+        
+    </SplitPane>
+
+    <!-- Estadísticas Totales -->
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #343a40; -fx-background-radius: 5;">
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 200;">
+            <Label text="Total Productos" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblTotalProductos" text="0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 200;">
+            <Label text="Total Unidades" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblTotalUnidades" text="0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 250;">
+            <Label text="Valor Total Inventario" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblValorTotal" text=" $0.00" style="-fx-text-fill: #28a745; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 200;">
+            <Label text="Stock Bajo" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblStockBajo" text="0" style="-fx-text-fill: #dc3545; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

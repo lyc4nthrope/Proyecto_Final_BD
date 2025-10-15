@@ -1,4 +1,4 @@
-package com.uniquindio.crisdav.gestionventas.models.vo;
+package com.uniquindio.crisdav.gestionventas.models.dto;
 
 // Clase auxiliar para resultado del formulario
 public class ClienteFormResult {

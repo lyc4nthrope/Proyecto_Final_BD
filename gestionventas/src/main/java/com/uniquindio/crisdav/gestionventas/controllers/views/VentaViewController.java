@@ -1,12 +1,13 @@
 package com.uniquindio.crisdav.gestionventas.controllers.views;
 
 import com.uniquindio.crisdav.gestionventas.controllers.*;
+import com.uniquindio.crisdav.gestionventas.models.dto.ClienteFormResult;
 import com.uniquindio.crisdav.gestionventas.models.entity.*;
 import com.uniquindio.crisdav.gestionventas.utils.ValidadorUtil;
 import com.uniquindio.crisdav.gestionventas.models.vo.ProductoConCategoriaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
 import com.uniquindio.crisdav.gestionventas.utils.SessionManager;
-import com.uniquindio.crisdav.gestionventas.models.vo.ClienteFormResult;
+
 import javafx.geometry.Insets;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

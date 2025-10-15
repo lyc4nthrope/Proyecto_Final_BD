@@ -1,10 +1,10 @@
-package com.uniquindio.crisdav.gestionventas.models.vo;
+package com.uniquindio.crisdav.gestionventas.models.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 // Clase auxiliar para información del crédito
-public class CreditoInfoVO {
+public class CreditoInfo {
     private Integer idVentaCredito;
     private Integer idVenta;
     private String nombreCliente;
@@ -17,7 +17,7 @@ public class CreditoInfoVO {
     private Integer numCuotas;
     private Boolean tieneCuotasVencidas;
 
-    public CreditoInfoVO(Integer idVentaCredito, Integer idVenta, String nombreCliente, String cedulaCliente, LocalDate fechaVenta, BigDecimal totalVenta, BigDecimal cuotaInicial, BigDecimal saldoFinanciado, BigDecimal saldoPendiente, Integer numCuotas, Boolean tieneCuotasVencidas) {
+    public CreditoInfo(Integer idVentaCredito, Integer idVenta, String nombreCliente, String cedulaCliente, LocalDate fechaVenta, BigDecimal totalVenta, BigDecimal cuotaInicial, BigDecimal saldoFinanciado, BigDecimal saldoPendiente, Integer numCuotas, Boolean tieneCuotasVencidas) {
         this.idVentaCredito = idVentaCredito;
         this.idVenta = idVenta;
         this.nombreCliente = nombreCliente;

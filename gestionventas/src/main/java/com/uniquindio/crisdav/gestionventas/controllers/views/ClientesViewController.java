@@ -2,11 +2,12 @@ package com.uniquindio.crisdav.gestionventas.controllers.views;
 
 import com.uniquindio.crisdav.gestionventas.controllers.ClienteController;
 import com.uniquindio.crisdav.gestionventas.controllers.VentaController;
+import com.uniquindio.crisdav.gestionventas.models.dto.ClienteFormResult;
 import com.uniquindio.crisdav.gestionventas.models.entity.Cliente;
 import com.uniquindio.crisdav.gestionventas.models.entity.Venta;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
 import com.uniquindio.crisdav.gestionventas.utils.ValidadorUtil;
-import com.uniquindio.crisdav.gestionventas.models.vo.ClienteFormResult;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

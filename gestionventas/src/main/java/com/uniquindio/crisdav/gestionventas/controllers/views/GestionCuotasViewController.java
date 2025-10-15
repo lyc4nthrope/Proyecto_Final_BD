@@ -3,10 +3,11 @@ package com.uniquindio.crisdav.gestionventas.controllers.views;
 import com.uniquindio.crisdav.gestionventas.controllers.ClienteController;
 import com.uniquindio.crisdav.gestionventas.controllers.CuotaController;
 import com.uniquindio.crisdav.gestionventas.controllers.VentaController;
+import com.uniquindio.crisdav.gestionventas.models.dto.CreditoInfo;
 import com.uniquindio.crisdav.gestionventas.models.entity.*;
 import com.uniquindio.crisdav.gestionventas.models.enums.EstadoCuota;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
-import com.uniquindio.crisdav.gestionventas.models.vo.CreditoInfoVO;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,13 +31,13 @@ public class GestionCuotasViewController {
     @FXML private ComboBox<String> comboEstado;
 
     // Tabla de créditos
-    @FXML private TableView<CreditoInfoVO> tablaCreditosActivos;
-    @FXML private TableColumn<CreditoInfoVO, Integer> colCreditoId;
-    @FXML private TableColumn<CreditoInfoVO, String> colCliente;
-    @FXML private TableColumn<CreditoInfoVO, String> colFechaVenta;
-    @FXML private TableColumn<CreditoInfoVO, String> colTotal;
-    @FXML private TableColumn<CreditoInfoVO, String> colSaldo;
-    @FXML private TableColumn<CreditoInfoVO, String> colNumCuotas;
+    @FXML private TableView<CreditoInfo> tablaCreditosActivos;
+    @FXML private TableColumn<CreditoInfo, Integer> colCreditoId;
+    @FXML private TableColumn<CreditoInfo, String> colCliente;
+    @FXML private TableColumn<CreditoInfo, String> colFechaVenta;
+    @FXML private TableColumn<CreditoInfo, String> colTotal;
+    @FXML private TableColumn<CreditoInfo, String> colSaldo;
+    @FXML private TableColumn<CreditoInfo, String> colNumCuotas;
 
     // Info del crédito
     @FXML private Label lblInfoCliente;
@@ -69,11 +70,11 @@ public class GestionCuotasViewController {
     private VentaController ventaController;
     private ClienteController clienteController;
     
-    private ObservableList<CreditoInfoVO> listaCreditos;
-    private ObservableList<CreditoInfoVO> listaCreditosFiltrada;
+    private ObservableList<CreditoInfo> listaCreditos;
+    private ObservableList<CreditoInfo> listaCreditosFiltrada;
     private ObservableList<Cuota> listaCuotas;
     
-    private CreditoInfoVO creditoSeleccionado;
+    private CreditoInfo creditoSeleccionado;
 
     @FXML
     public void initialize() {
@@ -106,9 +107,9 @@ public class GestionCuotasViewController {
             new SimpleStringProperty(cellData.getValue().getNumCuotas() + " meses"));
 
         // Resaltar créditos con cuotas vencidas
-        tablaCreditosActivos.setRowFactory(tv -> new TableRow<CreditoInfoVO>() {
+        tablaCreditosActivos.setRowFactory(tv -> new TableRow<CreditoInfo>() {
             @Override
-            protected void updateItem(CreditoInfoVO item, boolean empty) {
+            protected void updateItem(CreditoInfo item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setStyle("");
@@ -225,7 +226,7 @@ public class GestionCuotasViewController {
                     boolean tieneCuotasVencidas = cuotas.stream()
                         .anyMatch(c -> c.getEstado() == EstadoCuota.VENCIDA);
                     
-                    CreditoInfoVO info = new CreditoInfoVO(
+                    CreditoInfo info = new CreditoInfo(
                         vc.getIdVentaCredito(),
                         vc.getIdVenta(),
                         cliente.getNombre(),
@@ -255,7 +256,7 @@ public class GestionCuotasViewController {
         }
     }
 
-    private void cargarCuotasDelCredito(CreditoInfoVO credito) {
+    private void cargarCuotasDelCredito(CreditoInfo credito) {
         try {
             List<Cuota> cuotas = cuotaController.listarCuotasPorVentaCredito(credito.getIdVentaCredito());
             listaCuotas.setAll(cuotas);
@@ -267,7 +268,7 @@ public class GestionCuotasViewController {
         }
     }
 
-    private void mostrarInfoCredito(CreditoInfoVO credito) {
+    private void mostrarInfoCredito(CreditoInfo credito) {
         lblInfoCliente.setText(credito.getNombreCliente() + " (CC: " + credito.getCedulaCliente() + ")");
         lblCuotaInicial.setText(FormatoUtil.formatearMoneda(credito.getCuotaInicial()));
         lblTotalFinanciado.setText(FormatoUtil.formatearMoneda(credito.getSaldoFinanciado()));
@@ -294,17 +295,17 @@ public class GestionCuotasViewController {
         lblTotalCreditos.setText(String.valueOf(listaCreditos.size()));
         
         BigDecimal montoTotal = listaCreditos.stream()
-            .map(CreditoInfoVO::getTotalVenta)
+            .map(CreditoInfo::getTotalVenta)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         lblMontoTotal.setText(FormatoUtil.formatearMoneda(montoTotal));
         
         BigDecimal saldoTotal = listaCreditos.stream()
-            .map(CreditoInfoVO::getSaldoPendiente)
+            .map(CreditoInfo::getSaldoPendiente)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         lblSaldoTotalPendiente.setText(FormatoUtil.formatearMoneda(saldoTotal));
         
         long cuotasVencidas = listaCreditos.stream()
-            .filter(CreditoInfoVO::getTieneCuotasVencidas)
+            .filter(CreditoInfo::getTieneCuotasVencidas)
             .count();
         lblTotalCuotasVencidas.setText(String.valueOf(cuotasVencidas));
     }
@@ -319,7 +320,7 @@ public class GestionCuotasViewController {
         String criterio = txtBuscarCliente.getText();
         String estado = comboEstado.getValue();
         
-        List<CreditoInfoVO> filtrados = listaCreditos.stream()
+        List<CreditoInfo> filtrados = listaCreditos.stream()
             .filter(c -> {
                 // Filtro de búsqueda
                 boolean coincideBusqueda = true;
