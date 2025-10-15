@@ -1,10 +1,12 @@
 package com.uniquindio.crisdav.gestionventas.controllers.views;
 
+import com.uniquindio.crisdav.gestionventas.models.dto.CategoriaComboItem;
 import com.uniquindio.crisdav.gestionventas.controllers.CategoriaController;
 import com.uniquindio.crisdav.gestionventas.controllers.ProductoController;
 import com.uniquindio.crisdav.gestionventas.models.entity.Categoria;
 import com.uniquindio.crisdav.gestionventas.models.vo.ProductoConCategoriaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
+import com.uniquindio.crisdav.gestionventas.models.dto.ProductoFormResult;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -160,12 +162,12 @@ public class ProductosViewController {
         resultado.ifPresent(form -> {
             try {
                 productoController.crearProducto(
-                    form.codigo,
-                    form.nombre,
-                    form.idCategoria,
-                    form.valorAdquisicion,
-                    form.valorVenta,
-                    form.stock
+                    form.getCodigo(),
+                    form.getNombre(),
+                    form.getIdCategoria(),
+                    form.getValorAdquisicion(),
+                    form.getValorVenta(),
+                    form.getStock()
                 );
                 
                 mostrarAlerta("Éxito", "Producto creado correctamente", Alert.AlertType.INFORMATION);
@@ -190,12 +192,12 @@ public class ProductosViewController {
                     productoController.buscarProducto(productoVO.getIdProducto());
                 
                 if (producto != null) {
-                    producto.setCodigo(form.codigo);
-                    producto.setNombre(form.nombre);
-                    producto.setIdCategoria(form.idCategoria);
-                    producto.setValorAdquisicion(form.valorAdquisicion);
-                    producto.setValorVenta(form.valorVenta);
-                    producto.setStock(form.stock);
+                    producto.setCodigo(form.getCodigo());
+                    producto.setNombre(form.getNombre());
+                    producto.setIdCategoria(form.getIdCategoria());
+                    producto.setValorAdquisicion(form.getValorAdquisicion());
+                    producto.setValorVenta(form.getValorVenta());
+                    producto.setStock(form.getStock());
                     
                     productoController.actualizarProducto(producto);
                     
@@ -289,7 +291,7 @@ public class ProductosViewController {
             
             // Seleccionar categoría
             for (CategoriaComboItem item : cmbCategoria.getItems()) {
-                if (item.id.equals(productoExistente.getIdProducto())) {
+                if (item.getId().equals(productoExistente.getIdProducto())) {
                     cmbCategoria.setValue(item);
                     break;
                 }
@@ -329,7 +331,7 @@ public class ProductosViewController {
                     }
 
                     return new ProductoFormResult(
-                        codigo, nombre, catSeleccionada.id, 
+                        codigo, nombre, catSeleccionada.getId(), 
                         valorAdq, valorVenta, stock
                     );
                 } catch (NumberFormatException e) {
@@ -351,39 +353,4 @@ public class ProductosViewController {
         alert.showAndWait();
     }
 
-    // Clase auxiliar para resultado del formulario
-    private static class ProductoFormResult {
-        String codigo;
-        String nombre;
-        Integer idCategoria;
-        BigDecimal valorAdquisicion;
-        BigDecimal valorVenta;
-        Integer stock;
-
-        ProductoFormResult(String codigo, String nombre, Integer idCategoria, 
-                          BigDecimal valorAdquisicion, BigDecimal valorVenta, Integer stock) {
-            this.codigo = codigo;
-            this.nombre = nombre;
-            this.idCategoria = idCategoria;
-            this.valorAdquisicion = valorAdquisicion;
-            this.valorVenta = valorVenta;
-            this.stock = stock;
-        }
-    }
-
-    // Clase auxiliar para ComboBox de categorías
-    private static class CategoriaComboItem {
-        Integer id;
-        String nombre;
-
-        CategoriaComboItem(Integer id, String nombre) {
-            this.id = id;
-            this.nombre = nombre;
-        }
-
-        @Override
-        public String toString() {
-            return nombre;
-        }
-    }
 }
