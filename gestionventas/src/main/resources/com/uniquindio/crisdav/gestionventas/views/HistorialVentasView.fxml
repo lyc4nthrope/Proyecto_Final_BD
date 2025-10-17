@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.HistorialVentasViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="📋 Historial de Ventas" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📊 Exportar" onAction="#exportarReporte" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Filtros -->
+    <VBox spacing="10" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 5;">
+        <Label text="🔍 Filtros de Búsqueda" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+        
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <VBox spacing="5">
+                <Label text="Fecha Inicio:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
+                <DatePicker fx:id="dpFechaInicio" prefWidth="150"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Fecha Fin:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
+                <DatePicker fx:id="dpFechaFin" prefWidth="150"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Tipo de Venta:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
+                <ComboBox fx:id="comboTipoVenta" prefWidth="150" onAction="#aplicarFiltros"></ComboBox>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Buscar ID:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
+                <TextField fx:id="txtBuscar" promptText="ID de venta" prefWidth="120"/>
+            </VBox>
+            
+            <VBox spacing="5" alignment="BOTTOM_LEFT">
+                <Label text=" "/>
+                <Button text="🔍 Buscar" onAction="#cargarVentas" 
+                        style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 20;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Tabla de Ventas -->
+    <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS" style="-fx-font-size: 12;">
+        <columns>
+            <TableColumn text="ID" prefWidth="60" fx:id="colId" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Fecha" prefWidth="100" fx:id="colFecha" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Tipo" prefWidth="100" fx:id="colTipo" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Subtotal" prefWidth="120" fx:id="colSubtotal" style="-fx-alignment: CENTER_RIGHT;"/>
+            <TableColumn text="IVA" prefWidth="120" fx:id="colIva" style="-fx-alignment: CENTER_RIGHT;"/>
+            <TableColumn text="Total" prefWidth="120" fx:id="colTotal" style="-fx-alignment: CENTER_RIGHT;"/>
+            <TableColumn text="Acciones" prefWidth="150" fx:id="colAcciones" style="-fx-alignment: CENTER;"/>
+        </columns>
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="📋" style="-fx-font-size: 48;"/>
+                <Label text="No hay ventas en el período seleccionado" style="-fx-font-size: 16; -fx-text-fill: #666;"/>
+                <Label text="Ajuste las fechas y presione 'Buscar'" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+            </VBox>
+        </placeholder>
+    </TableView>
+
+    <!-- Estadísticas -->
+    <HBox spacing="15" alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #343a40; -fx-background-radius: 5;">
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 150;">
+            <Label text="Total Ventas" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblTotalVentas" text="0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 150;">
+            <Label text="Contado" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblVentasContado" text="0" style="-fx-text-fill: #28a745; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 150;">
+            <Label text="Crédito" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblVentasCredito" text="0" style="-fx-text-fill: #ffc107; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 200;">
+            <Label text="Monto Total" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblMontoTotal" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 200;">
+            <Label text="IVA Total" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblIvaTotal" text=" $0.00" style="-fx-text-fill: #17a2b8; -fx-font-size: 22; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

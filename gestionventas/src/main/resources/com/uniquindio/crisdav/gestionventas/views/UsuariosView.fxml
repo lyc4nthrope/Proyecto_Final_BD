@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.UsuariosViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="👥 Gestión de Usuarios" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Nuevo Usuario" onAction="#nuevoUsuario" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-font-weight: bold;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Advertencia Admin -->
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #f8d7da; -fx-padding: 10; -fx-background-radius: 5; -fx-border-color: #dc3545; -fx-border-width: 2; -fx-border-radius: 5;">
+        <Label text="⚠️" style="-fx-font-size: 24;"/>
+        <VBox spacing="3">
+            <Label text="Área de Administración" style="-fx-font-weight: bold; -fx-text-fill: #721c24; -fx-font-size: 14;"/>
+            <Label text="Solo usuarios con nivel Administrador pueden gestionar usuarios del sistema" style="-fx-font-size: 11; -fx-text-fill: #721c24;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Búsqueda y Filtros -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
+        <Label text="🔍 Buscar:" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+        <TextField fx:id="txtBuscar" promptText="Buscar por username..." prefWidth="250"/>
+        
+        <Separator orientation="VERTICAL"/>
+        
+        <Label text="Nivel:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="comboFiltroNivel" prefWidth="150" onAction="#aplicarFiltros"></ComboBox>
+        
+        <Label text="Estado:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="comboFiltroEstado" prefWidth="150" onAction="#aplicarFiltros"></ComboBox>
+        
+        <Button text="🔄 Actualizar" onAction="#cargarUsuarios" 
+                style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- Tabla de Usuarios -->
+    <TableView fx:id="tablaUsuarios" VBox.vgrow="ALWAYS" style="-fx-font-size: 12;">
+        <columns>
+            <TableColumn text="ID" prefWidth="50" fx:id="colId" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Username" prefWidth="200" fx:id="colUsername"/>
+            <TableColumn text="Nivel" prefWidth="150" fx:id="colNivel" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Estado" prefWidth="120" fx:id="colEstado" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Acciones" prefWidth="230" fx:id="colAcciones" style="-fx-alignment: CENTER;"/>
+        </columns>
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="👥" style="-fx-font-size: 48;"/>
+                <Label text="No hay usuarios registrados" style="-fx-font-size: 16; -fx-text-fill: #666;"/>
+            </VBox>
+        </placeholder>
+    </TableView>
+
+    <!-- Estadísticas -->
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #343a40; -fx-background-radius: 5;">
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 120;">
+            <Label text="Total" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label fx:id="lblTotalUsuarios" text="0" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 120;">
+            <Label text="Administradores" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label fx:id="lblAdministradores" text="0" style="-fx-text-fill: #dc3545; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 120;">
+            <Label text="Paramétricos" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label fx:id="lblParametricos" text="0" style="-fx-text-fill: #ffc107; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 120;">
+            <Label text="Esporádicos" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label fx:id="lblEsporadicos" text="0" style="-fx-text-fill: #17a2b8; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 120;">
+            <Label text="Activos" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label fx:id="lblActivos" text="0" style="-fx-text-fill: #28a745; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 120;">
+            <Label text="Inactivos" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label fx:id="lblInactivos" text="0" style="-fx-text-fill: #6c757d; -fx-font-size: 24; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Leyenda de Niveles -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-background-color: #e9ecef; -fx-padding: 10; -fx-background-radius: 5;">
+        <VBox spacing="3" alignment="CENTER">
+            <Label text="👑 Administrador" style="-fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label text="Acceso total" style="-fx-font-size: 10; -fx-text-fill: #666;"/>
+        </VBox>
+        
+        <VBox spacing="3" alignment="CENTER">
+            <Label text="⚙️ Paramétrico" style="-fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label text="Gestión y reportes" style="-fx-font-size: 10; -fx-text-fill: #666;"/>
+        </VBox>
+        
+        <VBox spacing="3" alignment="CENTER">
+            <Label text="👤 Esporádico" style="-fx-font-weight: bold; -fx-font-size: 11;"/>
+            <Label text="Solo consultas" style="-fx-font-size: 10; -fx-text-fill: #666;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

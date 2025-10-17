@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.ReporteIVAViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="📊 Reporte de IVA - DIAN" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📄 Exportar PDF" onAction="#exportarPDF" 
+                style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15; -fx-font-weight: bold;"/>
+        <Button text="📤 Enviar a DIAN" onAction="#enviarDIAN" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15; -fx-font-weight: bold;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Información DIAN -->
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #fff3cd; -fx-padding: 15; -fx-background-radius: 5; -fx-border-color: #ffc107; -fx-border-width: 2; -fx-border-radius: 5;">
+        <Label text="⚠️" style="-fx-font-size: 32;"/>
+        <VBox spacing="5">
+            <Label text="Declaración de IVA - DIAN" style="-fx-font-weight: bold; -fx-font-size: 14; -fx-text-fill: #856404;"/>
+            <Label text="Seleccione el período fiscal para generar el reporte de IVA" style="-fx-font-size: 12; -fx-text-fill: #856404;"/>
+            <Label text="Este reporte debe presentarse trimestralmente ante la DIAN" style="-fx-font-size: 11; -fx-text-fill: #856404;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblFechaGeneracion" text="Generado: 15/10/2024" style="-fx-font-size: 11; -fx-text-fill: #856404;"/>
+    </HBox>
+
+    <!-- Selección de Período -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 5;">
+        <VBox spacing="5">
+            <Label text="Año Fiscal:" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+            <Spinner fx:id="spinAnio" prefWidth="120" editable="true"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="Trimestre:" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+            <ComboBox fx:id="comboTrimestre" prefWidth="200"></ComboBox>
+        </VBox>
+        
+        <VBox spacing="5" alignment="BOTTOM_LEFT">
+            <Label text=" "/>
+            <Button text="📊 Generar Reporte" onAction="#generarReporte" 
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 30; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <VBox spacing="5" alignment="CENTER_RIGHT">
+            <Label text="Período Seleccionado:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblPeriodo" text="-" style="-fx-font-size: 14; -fx-text-fill: #007bff; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Tabla de Reporte -->
+    <TableView fx:id="tablaReporteIva" VBox.vgrow="ALWAYS" style="-fx-font-size: 13;">
+        <columns>
+            <TableColumn text="Categoría" prefWidth="200" fx:id="colCategoria"/>
+            <TableColumn text="Total Ventas" prefWidth="180" fx:id="colVentas" style="-fx-alignment: CENTER_RIGHT;"/>
+            <TableColumn text=" % IVA" prefWidth="100" fx:id="colIva" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Total IVA" prefWidth="180" fx:id="colTotalIva" style="-fx-alignment: CENTER_RIGHT;"/>
+        </columns>
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="📊" style="-fx-font-size: 48;"/>
+                <Label text="Seleccione un período y genere el reporte" style="-fx-font-size: 16; -fx-text-fill: #666;"/>
+                <Label text="El reporte mostrará el IVA por categoría" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+            </VBox>
+        </placeholder>
+    </TableView>
+
+    <!-- Totales -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #007bff; -fx-background-radius: 5;">
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 300;">
+            <Label text="TOTAL VENTAS DEL TRIMESTRE" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
+            <Label fx:id="lblTotalVentas" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 300;">
+            <Label text="TOTAL IVA A PAGAR" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
+            <Label fx:id="lblTotalIva" text=" $0.00" style="-fx-text-fill: #ffc107; -fx-font-size: 32; -fx-font-weight: bold;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

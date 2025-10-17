@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.CategoriasViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="📑 Gestión de Categorías" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Nueva Categoría" onAction="#nuevaCategoria" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-font-weight: bold;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Información -->
+    <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #e7f3ff; -fx-padding: 15; -fx-background-radius: 5; -fx-border-color: #007bff; -fx-border-width: 2; -fx-border-radius: 5;">
+        <Label text="ℹ️" style="-fx-font-size: 24;"/>
+        <VBox spacing="5">
+            <Label text="Categorías del Sistema" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label text="Cada categoría define el IVA y la utilidad de sus productos" style="-fx-font-size: 12;"/>
+            <Label text="Los valores se expresan en formato decimal (ej: 0.16 = 16%)" style="-fx-font-size: 11; -fx-text-fill: #666;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔄 Actualizar" onAction="#cargarCategorias" 
+                style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- Tabla de Categorías -->
+    <TableView fx:id="tablaCategorias" VBox.vgrow="ALWAYS" style="-fx-font-size: 13;">
+        <columns>
+            <TableColumn text="ID" prefWidth="60" fx:id="colId" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Nombre" prefWidth="200" fx:id="colNombre"/>
+            <TableColumn text="IVA" prefWidth="120" fx:id="colIva" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Utilidad" prefWidth="120" fx:id="colUtilidad" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Acciones" prefWidth="250" fx:id="colAcciones" style="-fx-alignment: CENTER;"/>
+        </columns>
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="📑" style="-fx-font-size: 48;"/>
+                <Label text="No hay categorías registradas" style="-fx-font-size: 16; -fx-text-fill: #666;"/>
+                <Label text="Las categorías por defecto son: Audio, Video, Tecnología, Cocina" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+            </VBox>
+        </placeholder>
+    </TableView>
+
+    <!-- Estadísticas -->
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #343a40; -fx-background-radius: 5;">
+        <VBox spacing="5" alignment="CENTER" style="-fx-min-width: 200;">
+            <Label text="Total Categorías" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label fx:id="lblTotalCategorias" text="0" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+        </VBox>
+        
+        <Separator orientation="VERTICAL" style="-fx-background-color: white;"/>
+        
+        <VBox spacing="5" alignment="CENTER_LEFT" style="-fx-min-width: 400;">
+            <Label text="Categorías Predefinidas del Sistema" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            <Label text="• Audio (IVA 16%, Utilidad 35%)" style="-fx-text-fill: white; -fx-font-size: 11;"/>
+            <Label text="• Video (IVA 19%, Utilidad 39%)" style="-fx-text-fill: white; -fx-font-size: 11;"/>
+            <Label text="• Tecnología (IVA 12%, Utilidad 40%)" style="-fx-text-fill: white; -fx-font-size: 11;"/>
+            <Label text="• Cocina (IVA 12%, Utilidad 35%)" style="-fx-text-fill: white; -fx-font-size: 11;"/>
+        </VBox>
+    </HBox>
+
+</VBox>

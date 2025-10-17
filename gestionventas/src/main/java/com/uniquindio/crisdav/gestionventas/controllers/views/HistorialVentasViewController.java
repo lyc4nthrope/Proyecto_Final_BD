@@ -1,0 +1,369 @@
+package com.uniquindio.crisdav.gestionventas.controllers.views;
+
+import com.uniquindio.crisdav.gestionventas.controllers.ReporteController;
+import com.uniquindio.crisdav.gestionventas.controllers.VentaController;
+import com.uniquindio.crisdav.gestionventas.models.entity.Venta;
+import com.uniquindio.crisdav.gestionventas.models.vo.FacturaVO;
+import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class HistorialVentasViewController {
+
+    @FXML private DatePicker dpFechaInicio;
+    @FXML private DatePicker dpFechaFin;
+    @FXML private ComboBox<String> comboTipoVenta;
+    @FXML private TextField txtBuscar;
+    
+    @FXML private TableView<Venta> tablaVentas;
+    @FXML private TableColumn<Venta, Integer> colId;
+    @FXML private TableColumn<Venta, String> colFecha;
+    @FXML private TableColumn<Venta, String> colTipo;
+    @FXML private TableColumn<Venta, String> colSubtotal;
+    @FXML private TableColumn<Venta, String> colIva;
+    @FXML private TableColumn<Venta, String> colTotal;
+    @FXML private TableColumn<Venta, Void> colAcciones;
+    
+    @FXML private Label lblTotalVentas;
+    @FXML private Label lblVentasContado;
+    @FXML private Label lblVentasCredito;
+    @FXML private Label lblMontoTotal;
+    @FXML private Label lblIvaTotal;
+
+    private VentaController ventaController;
+    private ReporteController reporteController;
+    private ObservableList<Venta> listaVentas;
+    private ObservableList<Venta> listaVentasFiltrada;
+
+    @FXML
+    public void initialize() {
+        ventaController = new VentaController();
+        reporteController = new ReporteController();
+        listaVentas = FXCollections.observableArrayList();
+        listaVentasFiltrada = FXCollections.observableArrayList();
+
+        configurarTabla();
+        configurarFiltros();
+        cargarVentas();
+    }
+
+    private void configurarTabla() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("idVenta"));
+        colFecha.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(FormatoUtil.formatearFecha(cellData.getValue().getFecha())));
+        colTipo.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getTipoVenta().getValor()));
+        colSubtotal.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(FormatoUtil.formatearMoneda(cellData.getValue().getSubtotal())));
+        colIva.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(FormatoUtil.formatearMoneda(cellData.getValue().getTotalIva())));
+        colTotal.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(FormatoUtil.formatearMoneda(cellData.getValue().getTotal())));
+
+        // Columna de acciones
+        colAcciones.setCellFactory(param -> new TableCell<>() {
+            private final Button btnVer = new Button("👁️ Ver Factura");
+            private final HBox hbox = new HBox(5, btnVer);
+
+            {
+                btnVer.setStyle("-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 11;");
+                
+                btnVer.setOnAction(event -> {
+                    Venta venta = getTableView().getItems().get(getIndex());
+                    verFactura(venta);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : hbox);
+            }
+        });
+
+        // Colorear filas según tipo
+        tablaVentas.setRowFactory(tv -> new TableRow<Venta>() {
+            @Override
+            protected void updateItem(Venta item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("");
+                } else if (item.getTipoVenta().getValor().equals("Credito")) {
+                    setStyle("-fx-background-color: #fff3cd;");
+                } else {
+                    setStyle("-fx-background-color: #d4edda;");
+                }
+            }
+        });
+
+        tablaVentas.setItems(listaVentasFiltrada);
+    }
+
+    private void configurarFiltros() {
+        // Fechas por defecto: último mes
+        dpFechaFin.setValue(LocalDate.now());
+        dpFechaInicio.setValue(LocalDate.now().minusMonths(1));
+        
+        comboTipoVenta.setValue("Todas");
+        
+        // Listener para búsqueda
+        txtBuscar.textProperty().addListener((obs, old, newVal) -> aplicarFiltros(null));
+    }
+
+    @FXML
+    private void cargarVentas() {
+        try {
+            LocalDate inicio = dpFechaInicio.getValue();
+            LocalDate fin = dpFechaFin.getValue();
+            
+            if (inicio == null || fin == null) {
+                mostrarAlerta("Error", "Debe seleccionar las fechas de inicio y fin", Alert.AlertType.ERROR);
+                return;
+            }
+            
+            if (inicio.isAfter(fin)) {
+                mostrarAlerta("Error", "La fecha de inicio debe ser anterior a la fecha fin", Alert.AlertType.ERROR);
+                return;
+            }
+            
+            List<Venta> ventas = ventaController.listarVentasPorFecha(inicio, fin);
+            listaVentas.setAll(ventas);
+            listaVentasFiltrada.setAll(ventas);
+            
+            aplicarFiltros(null);
+            actualizarEstadisticas();
+            
+        } catch (SQLException e) {
+            mostrarAlerta("Error", "Error al cargar ventas:\n" + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void aplicarFiltros(ActionEvent event) {
+        String tipoVenta = comboTipoVenta.getValue();
+        String busqueda = txtBuscar.getText().toLowerCase().trim();
+        
+        List<Venta> filtradas = listaVentas.stream()
+            .filter(v -> {
+                // Filtro por tipo
+                boolean coincideTipo = tipoVenta.equals("Todas") || 
+                                      v.getTipoVenta().getValor().equals(tipoVenta);
+                
+                // Filtro por búsqueda (ID)
+                boolean coincideBusqueda = busqueda.isEmpty() || 
+                                          String.valueOf(v.getIdVenta()).contains(busqueda);
+                
+                return coincideTipo && coincideBusqueda;
+            })
+            .collect(Collectors.toList());
+        
+        listaVentasFiltrada.setAll(filtradas);
+        actualizarEstadisticas();
+    }
+
+    private void actualizarEstadisticas() {
+        lblTotalVentas.setText(String.valueOf(listaVentasFiltrada.size()));
+        
+        long contado = listaVentasFiltrada.stream()
+            .filter(v -> v.getTipoVenta().getValor().equals("Contado"))
+            .count();
+        lblVentasContado.setText(String.valueOf(contado));
+        
+        long credito = listaVentasFiltrada.stream()
+            .filter(v -> v.getTipoVenta().getValor().equals("Credito"))
+            .count();
+        lblVentasCredito.setText(String.valueOf(credito));
+        
+        BigDecimal montoTotal = listaVentasFiltrada.stream()
+            .map(Venta::getTotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        lblMontoTotal.setText(FormatoUtil.formatearMoneda(montoTotal));
+        
+        BigDecimal ivaTotal = listaVentasFiltrada.stream()
+            .map(Venta::getTotalIva)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+        lblIvaTotal.setText(FormatoUtil.formatearMoneda(ivaTotal));
+    }
+
+    private void verFactura(Venta venta) {
+        try {
+            FacturaVO factura = reporteController.generarFactura(venta.getIdVenta());
+            
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Factura de Venta #" + venta.getIdVenta());
+            dialog.setHeaderText("Detalle de la Venta");
+            
+            VBox contenido = new VBox(15);
+            contenido.setPadding(new Insets(20));
+            contenido.setStyle("-fx-background-color: white;");
+            
+            // Encabezado
+            VBox encabezado = new VBox(5);
+            encabezado.setStyle("-fx-border-color: #007bff; -fx-border-width: 0 0 2 0; -fx-padding: 0 0 10 0;");
+            Label lblEmpresa = new Label("ELECTRODOMÉSTICOS S.A.");
+            lblEmpresa.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
+            Label lblNit = new Label("NIT: 900.123.456-7");
+            Label lblDireccion = new Label("Armenia, Quindío");
+            encabezado.getChildren().addAll(lblEmpresa, lblNit, lblDireccion);
+            
+            // Info factura
+            GridPane gridFactura = new GridPane();
+            gridFactura.setHgap(15);
+            gridFactura.setVgap(8);
+            
+            gridFactura.add(new Label("Factura #:"), 0, 0);
+            gridFactura.add(new Label(FormatoUtil.formatearCodigoFactura(factura.getIdVenta())), 1, 0);
+            gridFactura.add(new Label("Fecha:"), 0, 1);
+            gridFactura.add(new Label(FormatoUtil.formatearFecha(factura.getFecha())), 1, 1);
+            gridFactura.add(new Label("Tipo:"), 0, 2);
+            Label lblTipo = new Label(factura.getTipoVenta());
+            if (factura.getTipoVenta().equals("Credito")) {
+                lblTipo.setStyle("-fx-text-fill: #ffc107; -fx-font-weight: bold;");
+            } else {
+                lblTipo.setStyle("-fx-text-fill: #28a745; -fx-font-weight: bold;");
+            }
+            gridFactura.add(lblTipo, 1, 2);
+            
+            // Info cliente
+            VBox infoCliente = new VBox(5);
+            infoCliente.setStyle("-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 10; -fx-background-color: #f8f9fa;");
+            Label lblClienteTitulo = new Label("CLIENTE");
+            lblClienteTitulo.setStyle("-fx-font-weight: bold;");
+            infoCliente.getChildren().addAll(
+                lblClienteTitulo,
+                new Label("Nombre: " + factura.getNombreCliente()),
+                new Label("Cédula: " + factura.getCedulaCliente())
+            );
+            
+            // Detalles (items)
+            TableView<com.uniquindio.crisdav.gestionventas.models.vo.ItemFacturaVO> tablaItems = new TableView<>();
+            tablaItems.setPrefHeight(200);
+            
+            TableColumn<com.uniquindio.crisdav.gestionventas.models.vo.ItemFacturaVO, String> colCod = new TableColumn<>("Código");
+            colCod.setCellValueFactory(new PropertyValueFactory<>("codigoProducto"));
+            colCod.setPrefWidth(100);
+            
+            TableColumn<com.uniquindio.crisdav.gestionventas.models.vo.ItemFacturaVO, String> colProd = new TableColumn<>("Producto");
+            colProd.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
+            colProd.setPrefWidth(250);
+            
+            TableColumn<com.uniquindio.crisdav.gestionventas.models.vo.ItemFacturaVO, Integer> colCant = new TableColumn<>("Cant.");
+            colCant.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+            colCant.setPrefWidth(60);
+            
+            TableColumn<com.uniquindio.crisdav.gestionventas.models.vo.ItemFacturaVO, String> colPrecio = new TableColumn<>("Precio");
+            colPrecio.setCellValueFactory(cellData -> 
+                new SimpleStringProperty(FormatoUtil.formatearMoneda(cellData.getValue().getPrecioUnitario())));
+            colPrecio.setPrefWidth(100);
+            
+            TableColumn<com.uniquindio.crisdav.gestionventas.models.vo.ItemFacturaVO, String> colSubt = new TableColumn<>("Subtotal");
+            colSubt.setCellValueFactory(cellData -> 
+                new SimpleStringProperty(FormatoUtil.formatearMoneda(cellData.getValue().getSubtotal())));
+            colSubt.setPrefWidth(100);
+            
+            tablaItems.getColumns().addAll(colCod, colProd, colCant, colPrecio, colSubt);
+            tablaItems.setItems(FXCollections.observableArrayList(factura.getItems()));
+            
+            // Totales
+            VBox totales = new VBox(5);
+            totales.setStyle("-fx-border-color: #28a745; -fx-border-width: 2; -fx-padding: 15; -fx-background-color: #f8f9fa;");
+            
+            HBox hSubtotal = new HBox(10);
+            hSubtotal.getChildren().addAll(
+                createLabel("Subtotal:", true),
+                createLabel(FormatoUtil.formatearMoneda(factura.getSubtotal()), false)
+            );
+            
+            HBox hIva = new HBox(10);
+            hIva.getChildren().addAll(
+                createLabel("IVA:", true),
+                createLabel(FormatoUtil.formatearMoneda(factura.getTotalIva()), false)
+            );
+            
+            HBox hTotal = new HBox(10);
+            hTotal.getChildren().addAll(
+                createLabel("TOTAL:", true, 18),
+                createLabel(FormatoUtil.formatearMoneda(factura.getTotal()), false, 18)
+            );
+            hTotal.setStyle("-fx-padding: 5 0 0 0;");
+            
+            totales.getChildren().addAll(hSubtotal, hIva, new Separator(), hTotal);
+            
+            contenido.getChildren().addAll(
+                encabezado,
+                gridFactura,
+                infoCliente,
+                new Label("DETALLE DE PRODUCTOS"),
+                tablaItems,
+                totales
+            );
+            
+            ScrollPane scroll = new ScrollPane(contenido);
+            scroll.setFitToWidth(true);
+            scroll.setPrefHeight(600);
+            scroll.setPrefWidth(700);
+            
+            dialog.getDialogPane().setContent(scroll);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            
+            dialog.showAndWait();
+            
+        } catch (SQLException e) {
+            mostrarAlerta("Error", "Error al generar factura:\n" + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    private Label createLabel(String texto, boolean bold) {
+        return createLabel(texto, bold, 14);
+    }
+
+    private Label createLabel(String texto, boolean bold, int fontSize) {
+        Label label = new Label(texto);
+        String style = "-fx-font-size: " + fontSize + ";";
+        if (bold) style += " -fx-font-weight: bold;";
+        label.setStyle(style);
+        return label;
+    }
+
+    @FXML
+    private void exportarReporte(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Exportar Reporte");
+        alert.setHeaderText("Generar Reporte de Ventas");
+        alert.setContentText(
+            "Período: " + FormatoUtil.formatearFecha(dpFechaInicio.getValue()) + 
+            " al " + FormatoUtil.formatearFecha(dpFechaFin.getValue()) + "\n\n" +
+            "Total ventas: " + lblTotalVentas.getText() + "\n" +
+            "Monto total: " + lblMontoTotal.getText() + "\n\n" +
+            "Nota: La exportación a Excel/PDF requiere librerías adicionales.\n" +
+            "Implementación pendiente."
+        );
+        alert.showAndWait();
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+}

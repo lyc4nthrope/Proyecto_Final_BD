@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.VendedoresViewController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Título -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="👤 Gestión de Vendedores" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕ Nuevo Vendedor" onAction="#nuevoVendedor" 
+                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 8 20; -fx-font-weight: bold;"/>
+    </HBox>
+    
+    <Separator/>
+
+    <!-- Búsqueda -->
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
+        <Label text="🔍 Buscar:" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+        <TextField fx:id="txtBuscar" promptText="Buscar por nombre, teléfono o correo..." prefWidth="350"/>
+        <Button text="🔄 Actualizar" onAction="#cargarVendedores" 
+                style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- Tabla de Vendedores -->
+    <TableView fx:id="tablaVendedores" VBox.vgrow="ALWAYS" style="-fx-font-size: 12;">
+        <columns>
+            <TableColumn text="ID" prefWidth="50" fx:id="colId" style="-fx-alignment: CENTER;"/>
+            <TableColumn text="Nombre" prefWidth="250" fx:id="colNombre"/>
+            <TableColumn text="Teléfono" prefWidth="150" fx:id="colTelefono"/>
+            <TableColumn text="Correo Electrónico" prefWidth="250" fx:id="colCorreo"/>
+            <TableColumn text="Acciones" prefWidth="150" fx:id="colAcciones" style="-fx-alignment: CENTER;"/>
+        </columns>
+        <placeholder>
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="👤" style="-fx-font-size: 48;"/>
+                <Label text="No hay vendedores registrados" style="-fx-font-size: 16; -fx-text-fill: #666;"/>
+                <Label text="Haga clic en 'Nuevo Vendedor' para agregar uno" style="-fx-font-size: 12; -fx-text-fill: #999;"/>
+            </VBox>
+        </placeholder>
+    </TableView>
+
+    <!-- Información -->
+    <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-background-radius: 5;">
+        <VBox spacing="5">
+            <Label text="📊 Estadísticas" style="-fx-font-weight: bold; -fx-font-size: 13;"/>
+            <HBox spacing="10">
+                <Label text="Total de vendedores:" style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalVendedores" text="0" style="-fx-text-fill: #007bff; -fx-font-weight: bold; -fx-font-size: 14;"/>
+            </HBox>
+        </VBox>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <VBox spacing="3" alignment="CENTER_RIGHT">
+            <Label text="💡 Tip: Use la búsqueda para filtrar vendedores" style="-fx-font-size: 11; -fx-text-fill: #666;"/>
+            <Label text="Los vendedores son asignados a las ventas" style="-fx-font-size: 11; -fx-text-fill: #666;"/>
+        </VBox>
+    </HBox>
+
+</VBox>
