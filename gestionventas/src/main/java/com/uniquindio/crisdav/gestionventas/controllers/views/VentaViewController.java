@@ -450,8 +450,6 @@ public class VentaViewController {
             
             Optional<ButtonType> resultado = exitoAlert.showAndWait();
             if (resultado.isPresent() && resultado.get() == btnImprimir) {
-                // Aquí podrías generar e imprimir la factura
-                FacturaVO factura = reporteController.generarFactura(idVenta);
                 mostrarAlerta("Información", "Funcionalidad de impresión por implementar", Alert.AlertType.INFORMATION);
             }
 
