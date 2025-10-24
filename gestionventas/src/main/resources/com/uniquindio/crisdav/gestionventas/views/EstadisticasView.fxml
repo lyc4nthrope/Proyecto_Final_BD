@@ -1,119 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.chart.*?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.EstadisticasViewController"
-      spacing="15" style="-fx-padding: 20;">
 
-    <!-- Título -->
-    <HBox alignment="CENTER_LEFT" spacing="10">
-        <Label text="📈 Estadísticas de Ventas" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Button text="📊 Exportar" onAction="#exportarReporte" 
-                style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;"/>
-    </HBox>
-    
-    <Separator/>
-
-    <!-- Selección de Período -->
-    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 5;">
-        <VBox spacing="5">
-            <Label text="Fecha Inicio:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
-            <DatePicker fx:id="dpFechaInicio" prefWidth="150"/>
-        </VBox>
-        
-        <VBox spacing="5">
-            <Label text="Fecha Fin:" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
-            <DatePicker fx:id="dpFechaFin" prefWidth="150"/>
-        </VBox>
-        
-        <VBox spacing="5" alignment="BOTTOM_LEFT">
-            <Label text=" "/>
-            <Button text="📊 Generar Estadísticas" onAction="#generarEstadisticas" 
-                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 20; -fx-font-weight: bold;"/>
-        </VBox>
-    </HBox>
-
-    <!-- Estadísticas Generales -->
-    <GridPane hgap="15" vgap="15">
-        <padding>
-            <Insets top="10" bottom="10"/>
-        </padding>
-        
-        <!-- Total Ventas -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #007bff; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="0" GridPane.rowIndex="0">
-            <Label text="Total Ventas" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblTotalVentas" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
-        </VBox>
-        
-        <!-- Ventas Contado -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #28a745; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.rowIndex="0">
-            <Label text="Ventas Contado" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblVentasContado" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
-        </VBox>
-        
-        <!-- Ventas Crédito -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #ffc107; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.rowIndex="0">
-            <Label text="Ventas Crédito" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblVentasCredito" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
-        </VBox>
-
-        <!-- Monto Total -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #17a2b8; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <Label text="Monto Total" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblMontoTotal" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
-        </VBox>
-        
-        <!-- Monto Contado -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #20c997; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <Label text="Monto Contado" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblMontoContado" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
-        </VBox>
-        
-        <!-- Monto Crédito -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #fd7e14; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.rowIndex="1">
-            <Label text="Monto Crédito" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblMontoCredito" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
-        </VBox>
-        
-        <!-- Promedio Venta -->
-        <VBox spacing="5" alignment="CENTER" style="-fx-background-color: #6f42c1; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.rowSpan="2">
-            <Label text="Promedio por Venta" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;"/>
-            <Label fx:id="lblPromedioVenta" text=" $0.00" style="-fx-text-fill: white; -fx-font-size: 32; -fx-font-weight: bold;"/>
-        </VBox>
-        
-        <columnConstraints>
-            <ColumnConstraints percentWidth="25"/>
-            <ColumnConstraints percentWidth="25"/>
-            <ColumnConstraints percentWidth="25"/>
-            <ColumnConstraints percentWidth="25"/>
-        </columnConstraints>
-    </GridPane>
-
-    <!-- Gráficos -->
-    <HBox spacing="15" VBox.vgrow="ALWAYS">
-        <!-- Gráfico de Pastel -->
-        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 15; -fx-background-color: white; -fx-border-radius: 5;">
-            <Label text="📊 Distribución por Tipo de Venta" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
-            <PieChart fx:id="graficoPorTipo" legendVisible="true" VBox.vgrow="ALWAYS"/>
-        </VBox>
-        
-        <!-- Gráfico de Barras -->
-        <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 15; -fx-background-color: white; -fx-border-radius: 5;">
-            <Label text="💰 Comparativo de Montos" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
-            <BarChart fx:id="graficoMontos" legendVisible="true" VBox.vgrow="ALWAYS">
-                <xAxis>
-                    <CategoryAxis fx:id="xAxis" label="Tipo de Venta"/>
-                </xAxis>
-                <yAxis>
-                    <NumberAxis fx:id="yAxis" label="Monto ($)"/>
-                </yAxis>
-            </BarChart>
-        </VBox>
-    </HBox>
-
-</VBox>
+<ScrollPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.uniquindio.crisdav.gestionventas.controllers.views.EstadisticasViewController">
+   <content>
+      <VBox spacing="15" style="-fx-padding: 20;">
+      
+          <!-- Título -->
+          <HBox alignment="CENTER_LEFT" spacing="10">
+              <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="📈 Estadísticas de Ventas" />
+              <Region HBox.hgrow="ALWAYS" />
+              <Button onAction="#exportarReporte" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 15;" text="📊 Exportar" />
+          </HBox>
+          
+          <Separator />
+      
+          <!-- Selección de Período -->
+          <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 5;">
+              <VBox spacing="5">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="Fecha Inicio:" />
+                  <DatePicker fx:id="dpFechaInicio" prefWidth="150" />
+              </VBox>
+              
+              <VBox spacing="5">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 12;" text="Fecha Fin:" />
+                  <DatePicker fx:id="dpFechaFin" prefWidth="150" />
+              </VBox>
+              
+              <VBox alignment="BOTTOM_LEFT" spacing="5">
+                  <Label text=" " />
+                  <Button onAction="#generarEstadisticas" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 13; -fx-padding: 8 20; -fx-font-weight: bold;" text="📊 Generar Estadísticas" />
+              </VBox>
+          </HBox>
+      
+          <!-- Estadísticas Generales -->
+          <GridPane hgap="15" vgap="15">
+              <padding>
+                  <Insets bottom="10" top="10" />
+              </padding>
+              
+              <!-- Total Ventas -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #007bff; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Total Ventas" />
+                  <Label fx:id="lblTotalVentas" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;" text="0" />
+              </VBox>
+              
+              <!-- Ventas Contado -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #28a745; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Ventas Contado" />
+                  <Label fx:id="lblVentasContado" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;" text="0" />
+              </VBox>
+              
+              <!-- Ventas Crédito -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #ffc107; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Ventas Crédito" />
+                  <Label fx:id="lblVentasCredito" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;" text="0" />
+              </VBox>
+      
+              <!-- Monto Total -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #17a2b8; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Monto Total" />
+                  <Label fx:id="lblMontoTotal" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text=" $0.00" />
+              </VBox>
+              
+              <!-- Monto Contado -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #20c997; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Monto Contado" />
+                  <Label fx:id="lblMontoContado" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text=" $0.00" />
+              </VBox>
+              
+              <!-- Monto Crédito -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #fd7e14; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Monto Crédito" />
+                  <Label fx:id="lblMontoCredito" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text=" $0.00" />
+              </VBox>
+              
+              <!-- Promedio Venta -->
+              <VBox alignment="CENTER" spacing="5" style="-fx-background-color: #6f42c1; -fx-padding: 20; -fx-background-radius: 10;" GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.rowSpan="2">
+                  <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="Promedio por Venta" />
+                  <Label fx:id="lblPromedioVenta" style="-fx-text-fill: white; -fx-font-size: 32; -fx-font-weight: bold;" text=" $0.00" />
+              </VBox>
+              
+              <columnConstraints>
+                  <ColumnConstraints percentWidth="25" />
+                  <ColumnConstraints percentWidth="25" />
+                  <ColumnConstraints percentWidth="25" />
+                  <ColumnConstraints percentWidth="25" />
+              </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+          </GridPane>
+      
+          <!-- Gráficos -->
+          <HBox spacing="15" VBox.vgrow="ALWAYS">
+              <!-- Gráfico de Pastel -->
+              <VBox spacing="10" style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 15; -fx-background-color: white; -fx-border-radius: 5;" HBox.hgrow="ALWAYS">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="📊 Distribución por Tipo de Venta" />
+                  <PieChart fx:id="graficoPorTipo" legendVisible="true" VBox.vgrow="ALWAYS" />
+              </VBox>
+              
+              <!-- Gráfico de Barras -->
+              <VBox spacing="10" style="-fx-border-color: #dee2e6; -fx-border-width: 1; -fx-padding: 15; -fx-background-color: white; -fx-border-radius: 5;" HBox.hgrow="ALWAYS">
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="💰 Comparativo de Montos" />
+                  <BarChart fx:id="graficoMontos" legendVisible="true" VBox.vgrow="ALWAYS">
+                      <xAxis>
+                          <CategoryAxis label="Tipo de Venta" fx:id="xAxis" />
+                      </xAxis>
+                      <yAxis>
+                          <NumberAxis fx:id="yAxis" label="Monto ($)" />
+                      </yAxis>
+                  </BarChart>
+              </VBox>
+          </HBox>
+      
+      </VBox>
+   </content>
+</ScrollPane>

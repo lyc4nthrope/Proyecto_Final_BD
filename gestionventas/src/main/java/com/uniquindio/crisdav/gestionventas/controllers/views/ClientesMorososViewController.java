@@ -70,8 +70,18 @@ public class ClientesMorososViewController {
         configurarTabla();
         configurarFechaHora();
         cargarClientesMorosos();
-        
-        comboOrdenamiento.setValue("Más días atrasado");
+        configurarCombobox();
+    }
+
+    private void configurarCombobox(){
+        // ComboBox Ordenamiento
+        comboOrdenamiento.setItems(FXCollections.observableArrayList(
+            "Mayor deuda",
+            "Mas cuotas vencidas",
+            "Más días atrasado",
+            "Nombre (A-Z)"
+        ));
+       comboOrdenamiento.setValue("Más días atrasado");
     }
 
     private void configurarTabla() {

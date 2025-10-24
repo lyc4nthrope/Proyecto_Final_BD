@@ -57,8 +57,20 @@ public class ClientesViewController {
         configurarTabla();
         cargarClientes();
         configurarBusqueda();
+        configurarCombobox();
+        
         
         comboFiltroCredito.setValue("Todos los clientes");
+    }
+
+    private void configurarCombobox(){
+        // ComboBox Filtro Crédito
+        comboFiltroCredito.setItems(FXCollections.observableArrayList(
+            "Todos los clientes",
+            "Con crédito activo",
+            "Sin crédito activo"
+        ));
+        comboFiltroCredito.setValue("12");
     }
 
     private void configurarTabla() {

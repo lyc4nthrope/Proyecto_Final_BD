@@ -7,6 +7,7 @@ import com.uniquindio.crisdav.gestionventas.utils.ValidadorUtil;
 import com.uniquindio.crisdav.gestionventas.models.vo.ProductoConCategoriaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
 import com.uniquindio.crisdav.gestionventas.utils.SessionManager;
+import com.uniquindio.crisdav.gestionventas.models.dto.ItemVentaUI;
 
 import javafx.geometry.Insets;
 import javafx.beans.property.SimpleStringProperty;
@@ -89,7 +90,18 @@ public class VentaViewController {
         configurarTabla();
         configurarSpinner();
         configurarTipoVenta();
+        configurarCombobox();
         
+        comboCuotas.setValue("12");
+    }
+
+    private void configurarCombobox(){
+        // ComboBox Cuotas
+        comboCuotas.setItems(FXCollections.observableArrayList(
+            "12",
+            "18",
+            "24"
+        ));
         comboCuotas.setValue("12");
     }
 
@@ -491,44 +503,6 @@ public class VentaViewController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    // Clase interna para items de la tabla
-    public static class ItemVentaUI {
-        private Integer idProducto;
-        private String codigo;
-        private String nombre;
-        private Integer cantidad;
-        private BigDecimal precioUnitario;
-        private BigDecimal iva;
-        private BigDecimal subtotal;
-
-        public ItemVentaUI(Integer idProducto, String codigo, String nombre, Integer cantidad, 
-                          BigDecimal precioUnitario, BigDecimal iva) {
-            this.idProducto = idProducto;
-            this.codigo = codigo;
-            this.nombre = nombre;
-            this.cantidad = cantidad;
-            this.precioUnitario = precioUnitario;
-            this.iva = iva;
-            calcularSubtotal();
-        }
-
-        public void calcularSubtotal() {
-            this.subtotal = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
-        }
-
-        // Getters y Setters
-        public Integer getIdProducto() { return idProducto; }
-        public String getCodigo() { return codigo; }
-        public String getNombre() { return nombre; }
-        public Integer getCantidad() { return cantidad; }
-        public void setCantidad(Integer cantidad) { 
-            this.cantidad = cantidad;
-        }
-        public BigDecimal getPrecioUnitario() { return precioUnitario; }
-        public BigDecimal getIva() { return iva; }
-        public BigDecimal getSubtotal() { return subtotal; }
     }
 
     private Dialog<ClienteFormResult> crearDialogoCliente(Cliente clienteExistente) {

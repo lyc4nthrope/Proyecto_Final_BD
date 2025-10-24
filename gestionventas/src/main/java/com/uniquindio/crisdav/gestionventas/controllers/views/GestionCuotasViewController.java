@@ -90,7 +90,18 @@ public class GestionCuotasViewController {
         configurarTablaCuotas();
         configurarSeleccion();
         cargarCreditosActivos();
+        configurarCombobox();
         
+        
+    }
+
+    private void configurarCombobox(){
+        // ComboBox estado
+        comboEstado.setItems(FXCollections.observableArrayList(
+            "Todos",
+            "Con saldo pendiente",
+            "Cancelados"
+        ));
         comboEstado.setValue("Todos");
     }
 

@@ -61,6 +61,17 @@ public class HistorialVentasViewController {
         configurarTabla();
         configurarFiltros();
         cargarVentas();
+        
+    }
+
+    private void configurarCombobox(){
+        // ComboBox Tipo de Venta
+        comboTipoVenta.setItems(FXCollections.observableArrayList(
+            "Todas",
+            "Contado",
+            "Credito"
+        ));
+       comboTipoVenta.setValue("Todas");
     }
 
     private void configurarTabla() {

@@ -62,9 +62,23 @@ public class InventarioViewController {
         configurarTabla();
         configurarFechaReporte();
         cargarInventario();
+        configurarCombobox();
         
-        comboCategoriaFiltro.setValue("Todas las categorías");
+        
     }
+
+    private void configurarCombobox(){
+        // ComboBox Categoría Filtro
+        comboCategoriaFiltro.setItems(FXCollections.observableArrayList(
+            "Todas las categorías",
+            "Audio",
+            "Video",
+            "Tecnología",
+            "Cocina"
+        ));
+       comboCategoriaFiltro.setValue("Todas las categorías");
+    }
+
 
     private void configurarTabla() {
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));

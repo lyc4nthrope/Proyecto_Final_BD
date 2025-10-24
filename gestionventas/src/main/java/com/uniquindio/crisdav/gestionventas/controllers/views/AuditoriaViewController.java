@@ -61,6 +61,16 @@ public class AuditoriaViewController {
         cargarAuditoria();
     }
 
+    private void configurarCombobox(){
+        // ComboBox Accion Filtro
+        comboAccion.setItems(FXCollections.observableArrayList(
+            "Todas las acciones",
+            "Login",
+            "Logout"
+        ));
+       comboAccion.setValue("Todas las acciones");
+    }
+
     private void configurarTabla() {
         colId.setCellValueFactory(new PropertyValueFactory<>("idAuditoria"));
         

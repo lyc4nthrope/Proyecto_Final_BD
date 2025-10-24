@@ -56,9 +56,28 @@ public class UsuariosViewController {
         configurarTabla();
         cargarUsuarios();
         configurarBusqueda();
+        configurarCombobox();
         
-        comboFiltroNivel.setValue("Todos los niveles");
+    }
+
+    private void configurarCombobox(){
+        // ComboBox Nivel Filtro
+        comboFiltroNivel.setItems(FXCollections.observableArrayList(
+            "Todos los niveles",
+            "Administrador",
+            "Parametrico",
+            "Esporadico"
+        ));
+       comboFiltroNivel.setValue("Todos los niveles");
+
+       // ComboBox Estado Filtro
+        comboFiltroEstado.setItems(FXCollections.observableArrayList(
+            "Todos los estados",
+            "Activo",
+            "Inactivo"
+        ));
         comboFiltroEstado.setValue("Todos los estados");
+
     }
 
     private void configurarTabla() {
