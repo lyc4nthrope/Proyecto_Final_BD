@@ -439,51 +439,60 @@ public class HistorialVentasViewController {
 
     @FXML
     private void exportarReporte(ActionEvent event) {
-
-        // Preparar parámetros
-        Map<String, Object> parametros = new HashMap<>();
-        parametros.put("FECHA_INICIO", FormatoUtil.formatearFecha(dpFechaInicio.getValue()));
-        parametros.put("FECHA_FIN", FormatoUtil.formatearFecha(dpFechaFin.getValue()));
-        parametros.put("TOTAL_VENTAS", Integer.parseInt(lblTotalVentas.getText()));
-        parametros.put("VENTAS_CONTADO", Integer.parseInt(lblVentasContado.getText()));
-        parametros.put("VENTAS_CREDITO", Integer.parseInt(lblVentasCredito.getText()));
-        parametros.put("MONTO_TOTAL", FormatoUtil.parsearMoneda(lblMontoTotal.getText()));
-        parametros.put("IVA_TOTAL", FormatoUtil.parsearMoneda(lblIvaTotal.getText()));
-        
-        // Ruta del reporte
-        String jrxmlPath = "/com/uniquindio/crisdav/gestionventas/reportes/ReporteVentas.jrxml";
-
-        // Ruta de salida
-        JasperReportUtil.crearDirectorioReportes();
-        String nombreArchivo = JasperReportUtil.generarNombreArchivo("Ventas" + FormatoUtil.formatearFechaSinEspacios(LocalDate.now()) + ".pdf");
-        String rutaSalida = JasperReportUtil.getRutaDocumentos() + File.separator + nombreArchivo;
-            
-        // Generar PDF con los items de la factura
-        boolean exito = JasperReportUtil.generarPDFDesdeColeccion(
-            jrxmlPath,
-            parametros,
-            listaVentasFiltrada,
-            rutaSalida
-        );
-
-        if (exito) {
-            // Preguntar si desea abrir el PDF
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("PDF Generado");
-            alert.setHeaderText("Factura generada exitosamente");
-            alert.setContentText("Archivo: " + rutaSalida + "\n\n¿Desea abrir el PDF?");
-                
-            ButtonType btnAbrir = new ButtonType("Abrir");
-            ButtonType btnCerrar = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(btnAbrir, btnCerrar);
-                
-            Optional<ButtonType> resultado = alert.showAndWait();
-            if (resultado.isPresent() && resultado.get() == btnAbrir) {
-                abrirArchivo(rutaSalida);
-            }
-        } else {
-                mostrarAlerta("Error", "No se pudo generar el PDF", Alert.AlertType.ERROR);
+        if (listaVentasFiltrada.isEmpty()) {
+            mostrarAlerta("Error", "No hay ventas para exportar", Alert.AlertType.WARNING);
+            return;
         }
+        try {
+            // Preparar parámetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("FECHA_INICIO", FormatoUtil.formatearFecha(dpFechaInicio.getValue()));
+            parametros.put("FECHA_FIN", FormatoUtil.formatearFecha(dpFechaFin.getValue()));
+            parametros.put("TOTAL_VENTAS", Integer.parseInt(lblTotalVentas.getText()));
+            parametros.put("VENTAS_CONTADO", Integer.parseInt(lblVentasContado.getText()));
+            parametros.put("VENTAS_CREDITO", Integer.parseInt(lblVentasCredito.getText()));
+            parametros.put("MONTO_TOTAL", FormatoUtil.parsearMoneda(lblMontoTotal.getText()));
+            parametros.put("IVA_TOTAL", FormatoUtil.parsearMoneda(lblIvaTotal.getText()));
+            
+            // Ruta del reporte
+            String jrxmlPath = "/com/uniquindio/crisdav/gestionventas/reportes/ReporteVentas.jrxml";
+
+            // Ruta de salida
+            JasperReportUtil.crearDirectorioReportes();
+            String nombreArchivo = JasperReportUtil.generarNombreArchivo("Ventas" + FormatoUtil.formatearFechaSinEspacios(LocalDate.now()) + ".pdf");
+            String rutaSalida = JasperReportUtil.getRutaDocumentos() + File.separator + nombreArchivo;
+                
+            // Generar PDF con los items de la factura
+            boolean exito = JasperReportUtil.generarPDFDesdeColeccion(
+                jrxmlPath,
+                parametros,
+                listaVentasFiltrada,
+                rutaSalida
+            );
+
+            if (exito) {
+                // Preguntar si desea abrir el PDF
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("PDF Generado");
+                alert.setHeaderText("Factura generada exitosamente");
+                alert.setContentText("Archivo: " + rutaSalida + "\n\n¿Desea abrir el PDF?");
+                    
+                ButtonType btnAbrir = new ButtonType("Abrir");
+                ButtonType btnCerrar = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(btnAbrir, btnCerrar);
+                    
+                Optional<ButtonType> resultado = alert.showAndWait();
+                if (resultado.isPresent() && resultado.get() == btnAbrir) {
+                    abrirArchivo(rutaSalida);
+                }
+            } else {
+                    mostrarAlerta("Error", "No se pudo generar el PDF", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al generar PDF:\n" + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

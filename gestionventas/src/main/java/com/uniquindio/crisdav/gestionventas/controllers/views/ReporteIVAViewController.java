@@ -3,6 +3,7 @@ package com.uniquindio.crisdav.gestionventas.controllers.views;
 import com.uniquindio.crisdav.gestionventas.controllers.ReporteController;
 import com.uniquindio.crisdav.gestionventas.models.vo.ReporteIvaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
+import com.uniquindio.crisdav.gestionventas.utils.JasperReportUtil;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,10 +14,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
+import java.awt.Desktop;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class ReporteIVAViewController {
 
@@ -126,21 +133,71 @@ public class ReporteIVAViewController {
     @FXML
     private void exportarPDF(ActionEvent event) {
         if (listaReporte.isEmpty()) {
-            mostrarAlerta("Error", "Debe generar un reporte primero", Alert.AlertType.WARNING);
+            mostrarAlerta("Error", "No hay un reporte para exportar", Alert.AlertType.WARNING);
             return;
         }
-        
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Exportar a PDF");
-        alert.setHeaderText("Reporte de IVA");
-        alert.setContentText(
-            "Período: " + lblPeriodo.getText() + "\n" +
-            "Total Ventas: " + lblTotalVentas.getText() + "\n" +
-            "Total IVA a Pagar: " + lblTotalIva.getText() + "\n\n" +
-            "Nota: La generación de PDF requiere librerías adicionales\n" +
-            "(iText o Apache PDFBox). Implementación pendiente."
-        );
-        alert.showAndWait();
+        try {
+            String trimestreStr = comboTrimestre.getValue();
+            int trimestre = Integer.parseInt(trimestreStr.substring(1, 2));
+            // Preparar parámetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("ANIO", spinAnio.getValue());
+            parametros.put("TRIMESTRE", trimestre);
+            parametros.put("PERIODO_TEXTO", trimestreStr);
+            parametros.put("TOTAL_VENTAS", FormatoUtil.parsearMoneda(lblTotalVentas.getText()));
+            parametros.put("TOTAL_IVA", FormatoUtil.parsearMoneda(lblTotalIva.getText()));
+            parametros.put("FECHA_GENERACIÓN", FormatoUtil.formatearFecha(LocalDate.now()));
+            
+            // Ruta del reporte
+            String jrxmlPath = "/com/uniquindio/crisdav/gestionventas/reportes/ReporteIVATrimestral.jrxml";
+
+            // Ruta de salida
+            JasperReportUtil.crearDirectorioReportes();
+            String nombreArchivo = JasperReportUtil.generarNombreArchivo("Ventas" + FormatoUtil.formatearFechaSinEspacios(LocalDate.now()) + ".pdf");
+            String rutaSalida = JasperReportUtil.getRutaDocumentos() + File.separator + nombreArchivo;
+                
+            // Generar PDF con los items de la factura
+            boolean exito = JasperReportUtil.generarPDFDesdeColeccion(
+                jrxmlPath,
+                parametros,
+                listaReporte,
+                rutaSalida
+            );
+
+            if (exito) {
+                // Preguntar si desea abrir el PDF
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("PDF Generado");
+                alert.setHeaderText("Factura generada exitosamente");
+                alert.setContentText("Archivo: " + rutaSalida + "\n\n¿Desea abrir el PDF?");
+                    
+                ButtonType btnAbrir = new ButtonType("Abrir");
+                ButtonType btnCerrar = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(btnAbrir, btnCerrar);
+                    
+                Optional<ButtonType> resultado = alert.showAndWait();
+                if (resultado.isPresent() && resultado.get() == btnAbrir) {
+                    abrirArchivo(rutaSalida);
+                }
+            } else {
+                    mostrarAlerta("Error", "No se pudo generar el PDF", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al generar PDF:\n" + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+
+    }
+
+    private void abrirArchivo(String ruta) {
+        try {
+            File archivo = new File(ruta);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir el archivo:\n" + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

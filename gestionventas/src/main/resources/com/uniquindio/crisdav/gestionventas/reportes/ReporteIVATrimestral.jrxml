@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ReporteIVATrimestral" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <!-- Parámetros -->
+    <parameter name="ANIO" class="java.lang.Integer"/>
+    <parameter name="TRIMESTRE" class="java.lang.Integer"/>
+    <parameter name="PERIODO_TEXTO" class="java.lang.String"/>
+    <parameter name="TOTAL_VENTAS" class="java.math.BigDecimal"/>
+    <parameter name="TOTAL_IVA" class="java.math.BigDecimal"/>
+    <parameter name="FECHA_GENERACION" class="java.lang.String"/>
+
+    <!-- Campos del DataSource (ReporteIvaVO) -->
+    <field name="categoria" class="java.lang.String"/>
+    <field name="totalVentasCategoria" class="java.math.BigDecimal"/>
+    <field name="ivaCategoria" class="java.math.BigDecimal"/>
+    <field name="totalIvaCategoria" class="java.math.BigDecimal"/>
+
+    <!-- Variables -->
+    <variable name="SUMA_VENTAS" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{totalVentasCategoria}]]></variableExpression>
+    </variable>
+
+    <variable name="SUMA_IVA" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{totalIvaCategoria}]]></variableExpression>
+    </variable>
+
+    <!-- TÍTULO -->
+    <title>
+        <band height="150">
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="0" width="555" height="60" backcolor="#FFC107"/>
+            </rectangle>
+
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="25"/>
+                <textElement textAlignment="Center">
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[⚠️ DECLARACIÓN DE IVA - DIAN]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="0" y="35" width="555" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ELECTRODOMÉSTICOS S.A.]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="20" y="75" width="100" height="15"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[NIT:]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="120" y="75" width="200" height="15"/>
+                <textElement>
+                    <font size="11"/>
+                </textElement>
+                <text><![CDATA[900.123.456-7]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="20" y="95" width="100" height="15"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Período Fiscal:]]></text>
+            </staticText>
+
+            <textField>
+                <reportElement x="120" y="95" width="200" height="15"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PERIODO_TEXTO}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="350" y="75" width="100" height="15"/>
+                <textElement>
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha Generación:]]></text>
+            </staticText>
+
+            <textField>
+                <reportElement x="450" y="75" width="100" height="15"/>
+                <textElement textAlignment="Right">
+                    <font size="11"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{FECHA_GENERACION}]]></textFieldExpression>
+            </textField>
+
+            <line>
+                <reportElement x="0" y="145" width="555" height="1"/>
+                <graphicElement>
+                    <pen lineWidth="2.0"/>
+                </graphicElement>
+            </line>
+        </band>
+    </title>
+
+    <!-- ENCABEZADO DE COLUMNAS -->
+    <columnHeader>
+        <band height="40">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="200" height="40" backcolor="#343A40" forecolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[CATEGORÍA]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement mode="Opaque" x="200" y="0" width="120" height="40" backcolor="#343A40" forecolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TOTAL VENTAS]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement mode="Opaque" x="320" y="0" width="80" height="40" backcolor="#343A40" forecolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[% IVA]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement mode="Opaque" x="400" y="0" width="155" height="40" backcolor="#343A40" forecolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[TOTAL IVA]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- DETALLE -->
+    <detail>
+        <band height="30">
+            <textField>
+                <reportElement x="0" y="0" width="200" height="30"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle">
+                    <font size="11"/>
+                    <paragraph leftIndent="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="$#,##0.00">
+                <reportElement x="200" y="0" width="120" height="30"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="11"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{totalVentasCategoria}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="#0.00%">
+                <reportElement x="320" y="0" width="80" height="30"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ivaCategoria}]]></textFieldExpression>
+            </textField>
+
+            <textField pattern="$#,##0.00">
+                <reportElement x="400" y="0" width="155" height="30"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{totalIvaCategoria}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <!-- SUMARIO -->
+    <summary>
+        <band height="250">
+            <line>
+                <reportElement x="0" y="10" width="555" height="1"/>
+                <graphicElement>
+                    <pen lineWidth="2.0"/>
+                </graphicElement>
+            </line>
+
+            <!-- Subtotales -->
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="20" width="555" height="80" backcolor="#E7F3FF"/>
+                <graphicElement>
+                    <pen lineWidth="1.0" lineColor="#007BFF"/>
+                </graphicElement>
+            </rectangle>
+
+            <staticText>
+                <reportElement x="200" y="35" width="200" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="13" isBold="true"/>
+                </textElement>
+                <text><![CDATA[SUBTOTAL VENTAS:]]></text>
+            </staticText>
+
+            <textField pattern="$#,##0.00">
+                <reportElement x="400" y="35" width="155" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="13" isBold="true"/>
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_VENTAS}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="200" y="65" width="200" height="25" forecolor="#DC3545"/>
+                <textElement textAlignment="Right">
+                    <font size="16" isBold="true" />
+                </textElement>
+                <text><![CDATA[TOTAL IVA A PAGAR:]]></text>
+            </staticText>
+
+            <textField pattern="$#,##0.00">
+                <reportElement x="400" y="65" width="155" height="25" forecolor="#DC3545"/>
+                <textElement textAlignment="Right">
+                    <font size="16" isBold="true" />
+                    <paragraph rightIndent="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL_IVA}]]></textFieldExpression>
+            </textField>
+
+            <!-- Información DIAN -->
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="115" width="555" height="80" backcolor="#FFF3CD"/>
+                <graphicElement>
+                    <pen lineWidth="1.0" lineColor="#FFC107"/>
+                </graphicElement>
+            </rectangle>
+
+            <staticText>
+                <reportElement x="20" y="125" width="515" height="20"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[IMPORTANTE - DECLARACIÓN ANTE LA DIAN]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="20" y="145" width="515" height="45"/>
+                <textElement>
+                    <font size="10"/>
+                </textElement>
+                <text><![CDATA[Este reporte debe presentarse trimestralmente ante la Dirección de Impuestos y Aduanas Nacionales (DIAN). 
+La declaración debe realizarse dentro de los plazos establecidos por la entidad.
+El IVA debe liquidarse sobre el valor de las ventas realizadas en el período.]]></text>
+            </staticText>
+
+            <!-- Firma -->
+            <line>
+                <reportElement x="50" y="215" width="200" height="1"/>
+            </line>
+
+            <staticText>
+                <reportElement x="50" y="220" width="200" height="15"/>
+                <textElement textAlignment="Center">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Firma del Representante Legal]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="0" y="235" width="555" height="10"/>
+                <textElement textAlignment="Center">
+                    <font size="8" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[Sistema de Gestión de Ventas - Universidad del Quindío]]></text>
+            </staticText>
+        </band>
+    </summary>
+
+</jasperReport>
