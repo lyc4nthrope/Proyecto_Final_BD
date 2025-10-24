@@ -373,7 +373,7 @@ public class HistorialVentasViewController {
             parametros.put("TOTAL_IVA", factura.getTotalIva());
             parametros.put("TOTAL", factura.getTotal());
             
-            // Ruta del reporte (debes crear este archivo .jrxml con iReport)
+            // Ruta del reporte
             String jrxmlPath = "/com/uniquindio/crisdav/gestionventas/reportes/Factura.jrxml";
             
             // Ruta de salida

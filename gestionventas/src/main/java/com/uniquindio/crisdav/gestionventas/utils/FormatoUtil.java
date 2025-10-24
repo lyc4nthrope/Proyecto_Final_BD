@@ -99,7 +99,19 @@ public final class FormatoUtil {
         }
         return fecha.format(FORMATO_FECHA_CORTA);
     }
-    
+
+    /**
+     * Formatea una fecha en formato sin espacios DDMMYY
+     * Ejemplo: 151024
+     */
+    public static String formatearFechaSinEspacios(LocalDate fecha) {
+        if (fecha == null) {
+            return "";
+        }
+        DateTimeFormatter formatoSinEspacios = DateTimeFormatter.ofPattern("ddMMyy");
+        return fecha.format(formatoSinEspacios);
+    }
+
     /**
      * Parsea una fecha desde String en formato DD/MM/YYYY
      */
@@ -122,14 +134,25 @@ public final class FormatoUtil {
             return BigDecimal.ZERO;
         }
         try {
-            // Eliminar símbolos de moneda, espacios y separadores de miles
-            String limpio = monto.replaceAll("[^0-9.,]", "")
-                                 .replace(",", "");
+            // Eliminar símbolo de moneda y espacios
+            String limpio = monto.replaceAll("[^0-9.,-]", "").trim();
+
+            // Si el formato usa punto como separador de miles y coma como decimal,
+            // eliminamos los puntos y reemplazamos la coma por punto.
+            if (limpio.contains(",") && limpio.contains(".")) {
+                // Asumir formato "1.234.567,89"
+                limpio = limpio.replace(".", "").replace(",", ".");
+            } else if (limpio.contains(",")) {
+                // Asumir formato "1234,56"
+                limpio = limpio.replace(",", ".");
+            }
+
             return new BigDecimal(limpio);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Formato de monto inválido");
+            throw new IllegalArgumentException("Formato de monto inválido: " + monto, e);
         }
     }
+
     
     /**
      * Formatea un número de teléfono

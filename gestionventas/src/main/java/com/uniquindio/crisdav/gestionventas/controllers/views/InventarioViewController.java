@@ -3,6 +3,8 @@ package com.uniquindio.crisdav.gestionventas.controllers.views;
 import com.uniquindio.crisdav.gestionventas.controllers.ReporteController;
 import com.uniquindio.crisdav.gestionventas.models.vo.InventarioVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
+import com.uniquindio.crisdav.gestionventas.utils.JasperReportUtil;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +17,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
+import java.awt.Desktop;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -297,17 +302,60 @@ public class InventarioViewController {
 
     @FXML
     private void exportarPDF(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Exportar a PDF");
-        alert.setHeaderText("Funcionalidad de exportación");
-        alert.setContentText(
-            "Datos a exportar:\n" +
-            "- " + listaInventario.size() + " productos\n" +
-            "- Valor total: " + lblValorTotal.getText() + "\n\n" +
-            "Nota: La exportación a Excel requiere librerías adicionales\n" +
-            "(Apache POI). Implementación pendiente."
+
+        // Preparar parámetros
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("FECHA_REPORTE", FormatoUtil.formatearFecha(LocalDate.now()));
+        parametros.put("TOTAL_PRODUCTOS", Integer.parseInt(lblTotalProductos.getText()));
+        parametros.put("TOTAL_UNIDADES", Integer.parseInt(lblTotalUnidades.getText()));
+        parametros.put("VALOR_TOTAL", FormatoUtil.parsearMoneda(lblValorTotal.getText()));
+        parametros.put("STOCK_BAJO", Integer.parseInt(lblStockBajo.getText()));
+        
+        // Ruta del reporte
+        String jrxmlPath = "/com/uniquindio/crisdav/gestionventas/reportes/ReporteInventario.jrxml";
+
+        // Ruta de salida
+        JasperReportUtil.crearDirectorioReportes();
+        String nombreArchivo = JasperReportUtil.generarNombreArchivo("Inventario" + FormatoUtil.formatearFechaSinEspacios(LocalDate.now()) + ".pdf");
+        String rutaSalida = JasperReportUtil.getRutaDocumentos() + File.separator + nombreArchivo;
+            
+        // Generar PDF con los items de la factura
+        boolean exito = JasperReportUtil.generarPDFDesdeColeccion(
+            jrxmlPath,
+            parametros,
+            listaInventarioFiltrada,
+            rutaSalida
         );
-        alert.showAndWait();
+
+        if (exito) {
+            // Preguntar si desea abrir el PDF
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("PDF Generado");
+            alert.setHeaderText("Factura generada exitosamente");
+            alert.setContentText("Archivo: " + rutaSalida + "\n\n¿Desea abrir el PDF?");
+                
+            ButtonType btnAbrir = new ButtonType("Abrir");
+            ButtonType btnCerrar = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(btnAbrir, btnCerrar);
+                
+            Optional<ButtonType> resultado = alert.showAndWait();
+            if (resultado.isPresent() && resultado.get() == btnAbrir) {
+                abrirArchivo(rutaSalida);
+            }
+        } else {
+                mostrarAlerta("Error", "No se pudo generar el PDF", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void abrirArchivo(String ruta) {
+        try {
+            File archivo = new File(ruta);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir el archivo:\n" + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
