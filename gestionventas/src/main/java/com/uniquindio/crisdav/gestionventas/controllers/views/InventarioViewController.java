@@ -296,9 +296,9 @@ public class InventarioViewController {
     }
 
     @FXML
-    private void exportarExcel(ActionEvent event) {
+    private void exportarPDF(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Exportar a Excel");
+        alert.setTitle("Exportar a PDF");
         alert.setHeaderText("Funcionalidad de exportación");
         alert.setContentText(
             "Datos a exportar:\n" +

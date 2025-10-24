@@ -4,10 +4,13 @@ import com.uniquindio.crisdav.gestionventas.controllers.*;
 import com.uniquindio.crisdav.gestionventas.models.dto.ClienteFormResult;
 import com.uniquindio.crisdav.gestionventas.models.entity.*;
 import com.uniquindio.crisdav.gestionventas.utils.ValidadorUtil;
+import com.uniquindio.crisdav.gestionventas.models.vo.FacturaVO;
 import com.uniquindio.crisdav.gestionventas.models.vo.ProductoConCategoriaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
 import com.uniquindio.crisdav.gestionventas.utils.SessionManager;
 import com.uniquindio.crisdav.gestionventas.models.dto.ItemVentaUI;
+import com.uniquindio.crisdav.gestionventas.models.dto.VendedorComboItem;
+import com.uniquindio.crisdav.gestionventas.models.dto.ItemVenta;
 
 import javafx.geometry.Insets;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,6 +29,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class VentaViewController {
 
@@ -34,6 +38,10 @@ public class VentaViewController {
     @FXML private Label lblNombreCliente;
     @FXML private Label lblTelefonoCliente;
     @FXML private Label lblCreditoActivo;
+
+    // Información del vendedor
+    @FXML private ComboBox<VendedorComboItem> comboVendedor;
+    @FXML private Label lblVendedorInfo;
 
     // Tipo de venta
     @FXML private RadioButton rbContado;
@@ -77,6 +85,8 @@ public class VentaViewController {
     private Cliente clienteSeleccionado;
     private ProductoConCategoriaVO productoSeleccionado;
     private ObservableList<ItemVentaUI> itemsVenta;
+    private Integer idVendedorSeleccionado = null;
+    private ReporteController reporteController;
 
     @FXML
     public void initialize() {
@@ -84,6 +94,7 @@ public class VentaViewController {
         productoController = new ProductoController();
         ventaController = new VentaController();
         vendedorController = new VendedorController();
+        reporteController = new ReporteController();
 
         itemsVenta = FXCollections.observableArrayList();
 
@@ -91,6 +102,8 @@ public class VentaViewController {
         configurarSpinner();
         configurarTipoVenta();
         configurarCombobox();
+        cargarVendedores();
+        configurarVendedorSegunNivel();
         
         comboCuotas.setValue("12");
     }
@@ -392,22 +405,16 @@ public class VentaViewController {
     private void realizarVenta() {
         try {
             // Convertir items UI a items de venta
-            List<VentaController.ItemVenta> items = new ArrayList<>();
+            List<ItemVenta> items = new ArrayList<>();
             for (ItemVentaUI itemUI : itemsVenta) {
-                VentaController.ItemVenta item = ventaController.crearItem(
+                ItemVenta item = ventaController.crearItem(
                     itemUI.getIdProducto(), 
                     itemUI.getCantidad()
                 );
                 items.add(item);
             }
 
-            // Obtener primer vendedor (simplificado, podrías tener un selector)
-            List<Vendedor> vendedores = vendedorController.listarVendedores();
-            if (vendedores.isEmpty()) {
-                mostrarAlerta("Error", "No hay vendedores registrados", Alert.AlertType.ERROR);
-                return;
-            }
-            Integer idVendedor = vendedores.get(0).getIdVendedor();
+            Integer idVendedor = idVendedorSeleccionado;
 
             Integer idVenta;
             
@@ -444,6 +451,7 @@ public class VentaViewController {
             Optional<ButtonType> resultado = exitoAlert.showAndWait();
             if (resultado.isPresent() && resultado.get() == btnImprimir) {
                 // Aquí podrías generar e imprimir la factura
+                FacturaVO factura = reporteController.generarFactura(idVenta);
                 mostrarAlerta("Información", "Funcionalidad de impresión por implementar", Alert.AlertType.INFORMATION);
             }
 
@@ -503,6 +511,63 @@ public class VentaViewController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    private void cargarVendedores() {
+        try {
+            List<Vendedor> vendedores = vendedorController.listarVendedores();
+            
+            if (vendedores.isEmpty()) {
+                mostrarAlerta("Advertencia", 
+                    "No hay vendedores registrados. Se debe crear al menos uno.", 
+                    Alert.AlertType.WARNING);
+                return;
+            }
+            
+            // Si es administrador, cargar en el combo
+            if (SessionManager.getInstance().esAdministrador()) {
+                comboVendedor.getItems().clear();
+                for (Vendedor v : vendedores) {
+                    comboVendedor.getItems().add(new VendedorComboItem(v.getIdVendedor(), v.getNombre()));
+                }
+                
+                // Seleccionar el primero por defecto
+                if (!comboVendedor.getItems().isEmpty()) {
+                    comboVendedor.setValue(comboVendedor.getItems().get(0));
+                    idVendedorSeleccionado = comboVendedor.getValue().getId();
+                }
+            } else {
+                // Para paramétricos, seleccionar uno al azar
+                Random random = new Random();
+                Vendedor vendedorAleatorio = vendedores.get(random.nextInt(vendedores.size()));
+                idVendedorSeleccionado = vendedorAleatorio.getIdVendedor();
+                lblVendedorInfo.setText("Vendedor asignado: " + vendedorAleatorio.getNombre());
+            }
+            
+        } catch (SQLException e) {
+            mostrarAlerta("Error", "Error al cargar vendedores: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    // Configurar visibilidad según nivel
+    private void configurarVendedorSegunNivel() {
+        boolean esAdmin = SessionManager.getInstance().esAdministrador();
+        
+        // Mostrar/ocultar selector según nivel
+        comboVendedor.setVisible(esAdmin);
+        comboVendedor.setManaged(esAdmin);
+        lblVendedorInfo.setVisible(!esAdmin);
+        lblVendedorInfo.setManaged(!esAdmin);
+        
+        // Si es admin, listener para actualizar selección
+        if (esAdmin) {
+            comboVendedor.valueProperty().addListener((obs, old, newVal) -> {
+                if (newVal != null) {
+                    idVendedorSeleccionado = newVal.getId();
+                }
+            });
+        }
     }
 
     private Dialog<ClienteFormResult> crearDialogoCliente(Cliente clienteExistente) {

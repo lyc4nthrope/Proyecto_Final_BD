@@ -6,6 +6,7 @@ import com.uniquindio.crisdav.gestionventas.models.enums.TipoVenta;
 import com.uniquindio.crisdav.gestionventas.models.vo.FacturaVO;
 import com.uniquindio.crisdav.gestionventas.utils.DBUtil;
 import com.uniquindio.crisdav.gestionventas.dao.ProductoDAO;
+import com.uniquindio.crisdav.gestionventas.models.dto.ItemVenta;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -35,28 +36,6 @@ public class VentaController {
         this.productoDAO = new ProductoDAO();
         this.clienteDAO = new ClienteDAO();
         this.categoriaDAO = new CategoriaDAO();
-    }
-
-    /**
-     * Clase auxiliar para items del carrito de compra
-     */
-    public static class ItemVenta {
-        private Integer idProducto;
-        private Integer cantidad;
-        private BigDecimal precioUnitario;
-        private BigDecimal iva;
-
-        public ItemVenta(Integer idProducto, Integer cantidad, BigDecimal precioUnitario, BigDecimal iva) {
-            this.idProducto = idProducto;
-            this.cantidad = cantidad;
-            this.precioUnitario = precioUnitario;
-            this.iva = iva;
-        }
-
-        public Integer getIdProducto() { return idProducto; }
-        public Integer getCantidad() { return cantidad; }
-        public BigDecimal getPrecioUnitario() { return precioUnitario; }
-        public BigDecimal getIva() { return iva; }
     }
 
     /**

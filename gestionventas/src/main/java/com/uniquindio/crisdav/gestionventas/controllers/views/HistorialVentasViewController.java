@@ -5,6 +5,7 @@ import com.uniquindio.crisdav.gestionventas.controllers.VentaController;
 import com.uniquindio.crisdav.gestionventas.models.entity.Venta;
 import com.uniquindio.crisdav.gestionventas.models.vo.FacturaVO;
 import com.uniquindio.crisdav.gestionventas.utils.FormatoUtil;
+import com.uniquindio.crisdav.gestionventas.utils.JasperReportUtil;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -17,11 +18,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import java.awt.Desktop;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HistorialVentasViewController {
@@ -333,13 +340,88 @@ public class HistorialVentasViewController {
             scroll.setPrefWidth(700);
             
             dialog.getDialogPane().setContent(scroll);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-            
+
+            ButtonType generatePdfButtonType = new ButtonType("Generar PDF", ButtonBar.ButtonData.OK_DONE);
+            ButtonType closeButtonType = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            dialog.getDialogPane().getButtonTypes().addAll(generatePdfButtonType, closeButtonType);
+
+            // Manejar la acción del botón
+            Button generatePdfButton = (Button) dialog.getDialogPane().lookupButton(generatePdfButtonType);
+            generatePdfButton.setOnAction(e -> {
+                generarPDFFactura(factura);
+            });
             dialog.showAndWait();
             
         } catch (SQLException e) {
             mostrarAlerta("Error", "Error al generar factura:\n" + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
+        }
+    }
+
+    private void generarPDFFactura(FacturaVO factura) {
+        try {
+            // Preparar parámetros
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("ID_VENTA", factura.getIdVenta());
+            parametros.put("FECHA", FormatoUtil.formatearFecha(factura.getFecha()));
+            parametros.put("CLIENTE", factura.getNombreCliente());
+            parametros.put("CEDULA", factura.getCedulaCliente());
+            parametros.put("VENDEDOR", factura.getNombreVendedor());
+            parametros.put("TIPO_VENTA", factura.getTipoVenta());
+            parametros.put("SUBTOTAL", factura.getSubtotal());
+            parametros.put("TOTAL_IVA", factura.getTotalIva());
+            parametros.put("TOTAL", factura.getTotal());
+            
+            // Ruta del reporte (debes crear este archivo .jrxml con iReport)
+            String jrxmlPath = "/com/uniquindio/crisdav/gestionventas/reportes/Factura.jrxml";
+            
+            // Ruta de salida
+            JasperReportUtil.crearDirectorioReportes();
+            String nombreArchivo = JasperReportUtil.generarNombreArchivo("Factura_" + factura.getIdVenta());
+            String rutaSalida = JasperReportUtil.getRutaDocumentos() + File.separator + nombreArchivo;
+            
+            // Generar PDF con los items de la factura
+            boolean exito = JasperReportUtil.generarPDFDesdeColeccion(
+                jrxmlPath,
+                parametros,
+                factura.getItems(),
+                rutaSalida
+            );
+            
+            if (exito) {
+                // Preguntar si desea abrir el PDF
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("PDF Generado");
+                alert.setHeaderText("Factura generada exitosamente");
+                alert.setContentText("Archivo: " + rutaSalida + "\n\n¿Desea abrir el PDF?");
+                
+                ButtonType btnAbrir = new ButtonType("Abrir");
+                ButtonType btnCerrar = new ButtonType("Cerrar", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(btnAbrir, btnCerrar);
+                
+                Optional<ButtonType> resultado = alert.showAndWait();
+                if (resultado.isPresent() && resultado.get() == btnAbrir) {
+                    abrirArchivo(rutaSalida);
+                }
+            } else {
+                mostrarAlerta("Error", "No se pudo generar el PDF", Alert.AlertType.ERROR);
+            }
+            
+        } catch (Exception e) {
+            mostrarAlerta("Error", "Error al generar PDF:\n" + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    private void abrirArchivo(String ruta) {
+        try {
+            File archivo = new File(ruta);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(archivo);
+            }
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir el archivo:\n" + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

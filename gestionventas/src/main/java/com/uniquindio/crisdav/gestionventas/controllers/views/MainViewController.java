@@ -1,5 +1,6 @@
 package com.uniquindio.crisdav.gestionventas.controllers.views;
 
+import com.uniquindio.crisdav.gestionventas.Launcher;
 import com.uniquindio.crisdav.gestionventas.controllers.CuotaController;
 import com.uniquindio.crisdav.gestionventas.controllers.ReporteController;
 import com.uniquindio.crisdav.gestionventas.controllers.UsuarioController;
@@ -60,6 +61,7 @@ public class MainViewController {
         
         // Obtener usuario de la sesión
         usuarioActual = SessionManager.getInstance().getUsuarioActual();
+        usuarioController.setUsuarioActual(usuarioActual);
         
         if (usuarioActual != null) {
             lblUsuario.setText(usuarioActual.getUsername());
@@ -77,6 +79,17 @@ public class MainViewController {
         
         // Actualizar cuotas vencidas
         actualizarCuotasVencidas();
+
+            // Agregar el manejador de eventos de cierre de ventana
+        Platform.runLater(() -> {
+            // Obtenemos la instancia del Stage de esta vista
+            Stage stage = (Stage) contentArea.getScene().getWindow();
+            
+            stage.setOnCloseRequest(event -> {
+                // Manejar el evento de cierre de la ventana
+                handleWindowCloseRequest(event);
+            });
+        });
     }
 
     private void configurarPermisos() {
@@ -230,41 +243,41 @@ public class MainViewController {
         alert.showAndWait();
     }
 
-    @FXML
-    private void cerrarSesion(ActionEvent event) {
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Cerrar Sesión");
-        confirmacion.setHeaderText("¿Está seguro que desea cerrar sesión?");
-        confirmacion.setContentText("Deberá iniciar sesión nuevamente para acceder al sistema.");
-        
-        Optional<ButtonType> resultado = confirmacion.showAndWait();
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            try {
-                // Registrar logout en auditoría
-                usuarioController.logout();
-                
-                // Limpiar sesión
-                SessionManager.getInstance().logout();
-                
-                // Detener reloj
-                if (relojTimeline != null) {
-                    relojTimeline.stop();
-                }
-                
-                // Volver a login
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/uniquindio/crisdav/gestionventas/views/LoginView.fxml"));
-                Scene scene = new Scene(loader.load());
-                Stage stage = (Stage) contentArea.getScene().getWindow();
-                stage.setScene(scene);
-                stage.setMaximized(false);
-                stage.centerOnScreen();
-                
-            } catch (IOException | SQLException e) {
-                mostrarAlerta("Error", "Error al cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
-                e.printStackTrace();
+@FXML
+private void cerrarSesion(ActionEvent event) {
+    Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+    confirmacion.setTitle("Cerrar Sesión");
+    confirmacion.setHeaderText("¿Está seguro que desea cerrar sesión?");
+    confirmacion.setContentText("Deberá iniciar sesión nuevamente para acceder al sistema.");
+    
+    Optional<ButtonType> resultado = confirmacion.showAndWait();
+    if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+        try {
+            // Registrar logout antes de limpiar sesión
+            usuarioController.logout();
+            
+            // limpiamos la sesión
+            SessionManager.getInstance().logout();
+            
+            // Detener reloj
+            if (relojTimeline != null) {
+                relojTimeline.stop();
             }
+            
+            // Volver a login
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/uniquindio/crisdav/gestionventas/views/LoginView.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) contentArea.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(false);
+            stage.centerOnScreen();
+            
+        } catch (IOException | SQLException e) {
+            mostrarAlerta("Error", "Error al cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
+            e.printStackTrace();
         }
     }
+}
 
     @FXML
     private void salir(ActionEvent event) {
@@ -311,6 +324,37 @@ public class MainViewController {
                 "Ruta: " + rutaFXML, 
                 Alert.AlertType.INFORMATION);
             e.printStackTrace();
+        }
+    }
+
+    private void handleWindowCloseRequest(javafx.stage.WindowEvent event) {
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Salir de la Aplicación");
+        confirmacion.setHeaderText("¿Está seguro que desea salir de la aplicación?");
+        
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            try {
+                // Registrar logout si hay un usuario activo
+                if (usuarioActual != null) {
+                    usuarioController.logout();
+                }
+                
+                // Detener el reloj antes de salir
+                if (relojTimeline != null) {
+                    relojTimeline.stop();
+                }
+
+                // Continuar con el cierre de la aplicación
+                Platform.exit(); // Cierre ordenado de JavaFX
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Platform.exit();
+            }
+        } else {
+            // El usuario canceló la acción, por lo tanto, consumimos el evento para evitar el cierre
+            event.consume();
         }
     }
 

@@ -143,38 +143,6 @@ public class ReporteIVAViewController {
         alert.showAndWait();
     }
 
-    @FXML
-    private void enviarDIAN(ActionEvent event) {
-        if (listaReporte.isEmpty()) {
-            mostrarAlerta("Error", "Debe generar un reporte primero", Alert.AlertType.WARNING);
-            return;
-        }
-        
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Enviar a DIAN");
-        confirmacion.setHeaderText("¿Enviar reporte de IVA a la DIAN?");
-        confirmacion.setContentText(
-            "Período: " + lblPeriodo.getText() + "\n" +
-            "Total IVA: " + lblTotalIva.getText() + "\n\n" +
-            "Esta funcionalidad requiere integración con\n" +
-            "los servicios web de la DIAN."
-        );
-        
-        confirmacion.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                Alert resultado = new Alert(Alert.AlertType.INFORMATION);
-                resultado.setTitle("Envío Simulado");
-                resultado.setHeaderText("Reporte Enviado");
-                resultado.setContentText(
-                    "En producción, aquí se enviaría el reporte\n" +
-                    "al sistema de la DIAN mediante servicios web.\n\n" +
-                    "Implementación pendiente."
-                );
-                resultado.showAndWait();
-            }
-        });
-    }
-
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

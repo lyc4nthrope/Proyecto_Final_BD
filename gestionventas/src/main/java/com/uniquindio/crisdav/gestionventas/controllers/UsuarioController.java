@@ -61,6 +61,7 @@ public class UsuarioController {
             auditoriaDAO.insertar(auditoria);
             usuarioActual = null;
         }
+        
     }
 
     /**

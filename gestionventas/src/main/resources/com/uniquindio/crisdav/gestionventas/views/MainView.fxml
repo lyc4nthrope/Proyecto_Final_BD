@@ -83,6 +83,7 @@
             <Button text="📊 Reportes IVA" onAction="#mostrarReporteIVA" maxWidth="Infinity"/>
             <Button text="📈 Estadísticas" onAction="#mostrarEstadisticas" maxWidth="Infinity"/>
             <Button text="⚠️ Morosos" onAction="#mostrarClientesMorosos" maxWidth="Infinity"/>
+            <Button text="📊 Inventario" onAction="#mostrarInventario" maxWidth="Infinity"/>
         </VBox>
     </left>
     

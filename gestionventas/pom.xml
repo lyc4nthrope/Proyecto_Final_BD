@@ -43,6 +43,27 @@
             <artifactId>ojdbc8</artifactId>
             <version>21.5.0.0</version>
         </dependency>
+
+        <!-- JasperReports (principal) -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.20.6</version>
+        </dependency>
+
+        <!-- Soporte para flujos Java -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-javaflow</artifactId>
+            <version>6.20.6</version>
+        </dependency>
+
+        <!-- Fuentes para reportes -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>6.20.6</version>
+        </dependency>
     </dependencies>
 
     <build>

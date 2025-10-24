@@ -62,6 +62,24 @@
                </rowConstraints>
               </GridPane>
           </VBox>
+
+          <!-- Selección de Vendedor -->
+            <VBox spacing="10" style="-fx-border-color: #dee2e6; -fx-border-radius: 5; -fx-padding: 15;">
+                <Label text="Vendedor Asignado" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                
+                <!-- Para Administradores: ComboBox de selección -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Vendedor:" style="-fx-min-width: 100; -fx-font-weight: bold;"/>
+                    <ComboBox fx:id="comboVendedor" prefWidth="300" promptText="Seleccione un vendedor"/>
+                    <Label text="(Solo administradores pueden cambiar)" style="-fx-font-size: 10; -fx-text-fill: #666;"/>
+                </HBox>
+                
+                <!-- Para Paramétricos: Label informativo -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label fx:id="lblVendedorInfo" text="Vendedor asignado automáticamente" 
+                        style="-fx-font-size: 13; -fx-text-fill: #007bff; -fx-font-weight: bold;"/>
+                </HBox>
+            </VBox>
       
           <!-- Tipo de Venta -->
           <HBox alignment="CENTER_LEFT" spacing="20">
