@@ -14,5 +14,6 @@ module com.uniquindio.crisdav.gestionventas {
     opens com.uniquindio.crisdav.gestionventas.dao to javafx.base, javafx.fxml;
     opens com.uniquindio.crisdav.gestionventas.controllers to javafx.base, javafx.fxml;
     opens com.uniquindio.crisdav.gestionventas.models.vo to javafx.base, javafx.fxml;
+    opens com.uniquindio.crisdav.gestionventas.models.dto to javafx.base, javafx.fxml;
 
 }

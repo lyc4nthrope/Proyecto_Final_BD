@@ -61,6 +61,7 @@ public class HistorialVentasViewController {
         configurarTabla();
         configurarFiltros();
         cargarVentas();
+        configurarCombobox();
         
     }
 

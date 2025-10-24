@@ -59,6 +59,7 @@ public class AuditoriaViewController {
         cargarUsuarios();
         configurarFiltros();
         cargarAuditoria();
+        configurarCombobox();
     }
 
     private void configurarCombobox(){
