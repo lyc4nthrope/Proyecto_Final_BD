@@ -168,7 +168,7 @@ public class ReporteIVAViewController {
                 // Preguntar si desea abrir el PDF
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("PDF Generado");
-                alert.setHeaderText("Factura generada exitosamente");
+                alert.setHeaderText("Reporte generado exitosamente");
                 alert.setContentText("Archivo: " + rutaSalida + "\n\n¿Desea abrir el PDF?");
                     
                 ButtonType btnAbrir = new ButtonType("Abrir");
